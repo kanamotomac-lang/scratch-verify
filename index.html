@@ -751,8 +751,13 @@
     let found = false;
 
     try {
-      // CORSプロキシ経由でコメント取得（最新40件）
-      const comments = await scratchFetch(`/projects/${pid}/comments?limit=40&offset=0`);
+      // まずプロジェクト情報からオーナーのユーザー名を取得
+      const projectInfo = await scratchFetch(`/projects/${pid}`);
+      const owner = projectInfo.author?.username;
+      if (!owner) throw new Error('プロジェクトオーナーを取得できませんでした');
+
+      // 正しいエンドポイント: /users/{owner}/projects/{id}/comments
+      const comments = await scratchFetch(`/users/${owner}/projects/${pid}/comments?limit=40&offset=0`);
 
       for (const c of comments) {
         const authorName = c.author?.username || '';
