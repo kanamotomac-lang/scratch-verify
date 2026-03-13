@@ -519,13 +519,13 @@
 
     <!-- Panel 2: Instructions -->
     <div class="panel" id="panel2">
-      <div class="panel-title">🔑 確認コードを入力</div>
+      <div class="panel-title">確認コードを入力</div>
       <div class="panel-sub">以下の確認コードを、Scratchの連携用作品にコメントしてください。</div>
 
       <div class="code-box">
         <div class="code-label">あなたの確認コード</div>
         <div class="code-value" id="codeDisplay">------</div>
-        <button class="copy-btn" onclick="copyCode()">📋 コピー</button>
+        <button class="copy-btn" onclick="copyCode()">コピー</button>
       </div>
 
       <div class="instructions">
@@ -545,7 +545,7 @@
         </div>
       </div>
 
-      <button class="btn btn-primary" id="step2Btn" onclick="step2()">✅ 認証する</button>
+      <button class="btn btn-primary" id="step2Btn" onclick="step2()">✅認証する</button>
       <button class="btn btn-secondary" onclick="goBack()">← やり直す</button>
       <div class="timer" id="timerDisplay"></div>
       <div id="alert2"></div>
@@ -563,14 +563,14 @@
           <small style="color: var(--muted)">認証日時: <span id="authTime"></span></small>
         </div>
       </div>
-      <button class="btn btn-primary" onclick="resetAll()">🔄 別のアカウントで連携</button>
+      <button class="btn btn-primary" onclick="resetAll()">別のアカウントで連携</button>
     </div>
 
   </div>
 
   <!-- Config -->
   <div class="config-bar">
-    <button class="config-toggle" onclick="toggleConfig()">⚙ 設定（プロジェクトIDを変更）</button>
+    <button class="config-toggle" onclick="toggleConfig()">設定（プロジェクトIDを変更）</button>
     <div class="config-panel" id="configPanel">
       <label>連携用ScratchプロジェクトID</label>
       <div style="margin-top: 8px;">
@@ -660,8 +660,8 @@
   function copyCode() {
     navigator.clipboard.writeText(currentCode).then(() => {
       const btn = document.querySelector('.copy-btn');
-      btn.textContent = '✅ コピーしました！';
-      setTimeout(() => btn.textContent = '📋 コピー', 2000);
+      btn.textContent = 'コピーしました！';
+      setTimeout(() => btn.textContent = 'コピー', 2000);
     });
   }
 
@@ -708,7 +708,7 @@
       currentUser = data.username; // Scratch側の正確な表記を使う
     } catch(e) {
       if (e.status === 404) {
-        showAlert(1, `❌ ユーザー「${input}」はScratchに存在しません。ユーザー名を確認してください。`);
+        showAlert(1, `ユーザー「${input}」はScratchに存在しません。ユーザー名を確認してください。`);
         btn.disabled = false;
         btn.textContent = '確認コードを取得 →';
         return;
@@ -738,7 +738,7 @@
 
     // Check expiry
     if (Date.now() > expiresAt) {
-      showAlert(2, '⏰ コードが期限切れです。最初からやり直してください。');
+      showAlert(2, 'コードが期限切れです。最初からやり直してください。');
       return;
     }
 
@@ -771,14 +771,14 @@
         }
       }
     } catch(e) {
-      showAlert(2, `❌ コメントの確認中にエラーが発生しました。<br><small>${e.message}</small>`);
+      showAlert(2, `コメントの確認中にエラーが発生しました。<br><small>${e.message}</small>`);
       btn.disabled = false;
-      btn.innerHTML = '✅ 認証する';
+      btn.innerHTML = '認証する';
       return;
     }
 
     btn.disabled = false;
-    btn.innerHTML = '✅ 認証する';
+    btn.innerHTML = '認証する';
 
     if (found) {
       clearInterval(timerInterval);
@@ -789,7 +789,7 @@
       setStep(3);
     } else {
       showAlert(2,
-        `❌ 確認コード「<strong>${currentCode}</strong>」のコメントが見つかりませんでした。<br>
+        `確認コード「<strong>${currentCode}</strong>」のコメントが見つかりませんでした。<br>
         <small>・コメントを送信したか確認してください<br>
         ・ログインしているアカウントが <strong>${currentUser}</strong> であることを確認してください<br>
         ・コメントが反映されるまで数秒かかることがあります</small>`
