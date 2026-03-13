@@ -592,9 +592,10 @@
   let expiresAt = null;
   let timerInterval = null;
 
-  // ─── Scratch API ─────────────────────────────────
+  // ─── Scratch API (Cloudflare Worker経由) ──────────
+  const PROXY = 'https://plain-frost-317e.kanamoto-mac.workers.dev';
   async function scratchFetch(path) {
-    const res = await fetch('https://api.scratch.mit.edu' + path);
+    const res = await fetch(PROXY + path);
     if (!res.ok) {
       const err = new Error('HTTP ' + res.status);
       err.status = res.status;
