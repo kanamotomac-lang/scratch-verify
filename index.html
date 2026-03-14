@@ -538,8 +538,8 @@ async function authStep2() {
     // コメントAPIのフォールバック
     let found = !!hit;
     if (!found) {
-      // ✅ 修正: 正しいScratch APIエンドポイント /api/projects/{id}/comments を使用
-      const comments = await workerFetch(`/api/projects/${AUTH_PROJECT_ID}/comments?limit=40&offset=0`).catch(()=>[]);
+        // ✅ 修正: 正しいオーナー名を使用
+      const comments = await workerFetch(`/api/users/sub_0823ils_sub/projects/${AUTH_PROJECT_ID}/comments?limit=40&offset=0`).catch(()=>[]);
       found = Array.isArray(comments) && comments.some(c =>
         c.author?.username?.toLowerCase() === currentUser.toLowerCase() &&
         (c.content||'').trim() === authCode
