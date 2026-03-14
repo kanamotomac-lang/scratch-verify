@@ -3,799 +3,690 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scratch 連携認証</title>
+<title>Scratch セーブマネージャー</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --scratch-orange: #ff6b35;
-    --scratch-yellow: #ffca3a;
-    --scratch-teal: #44c8b0;
-    --scratch-purple: #9b5de5;
-    --scratch-blue: #3a86ff;
-    --bg: #0f0f1a;
-    --card-bg: #1a1a2e;
-    --card-border: #2a2a4a;
-    --text: #f0f0ff;
-    --muted: #8888aa;
-    --success: #06d6a0;
-    --error: #ef476f;
-  }
+:root {
+  --orange: #ff6b35;
+  --yellow: #ffca3a;
+  --teal: #44c8b0;
+  --purple: #9b5de5;
+  --blue: #3a86ff;
+  --green: #06d6a0;
+  --red: #ef476f;
+  --bg: #0c0c18;
+  --card: #161628;
+  --border: #252540;
+  --text: #f0f0ff;
+  --muted: #7777aa;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans JP', 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 24px;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: radial-gradient(circle, #ffffff06 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none; z-index: 0;
+}
+.blob { position: fixed; border-radius: 50%; filter: blur(90px); pointer-events: none; z-index: 0; }
+.blob.a { width: 500px; height: 500px; background: #9b5de515; top: -150px; left: -150px; }
+.blob.b { width: 400px; height: 400px; background: #3a86ff12; bottom: -100px; right: -100px; }
+.blob.c { width: 300px; height: 300px; background: #44c8b010; top: 50%; left: 50%; transform: translate(-50%,-50%); }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+.wrap { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; }
 
-  body {
-    font-family: 'Noto Sans JP', 'Nunito', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    overflow-x: hidden;
-  }
+/* ── Header ── */
+.header { text-align: center; padding: 40px 0 32px; animation: up .6s ease both; }
+.logo {
+  font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 2.2rem; letter-spacing: -1px;
+  background: linear-gradient(135deg, var(--orange), var(--yellow)); -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; background-clip: text;
+}
+.tagline { color: var(--muted); font-size: .85rem; margin-top: 6px; }
 
-  /* Background dots */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: radial-gradient(circle, #ffffff08 1px, transparent 1px);
-    background-size: 32px 32px;
-    pointer-events: none;
-    z-index: 0;
-  }
+/* ── Card ── */
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+  padding: 32px; margin-bottom: 16px; position: relative; overflow: hidden;
+  animation: up .6s ease .1s both;
+}
+.card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--orange), var(--yellow), var(--teal));
+}
+.card-title { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.2rem; margin-bottom: 6px; }
+.card-sub { color: var(--muted); font-size: .85rem; line-height: 1.6; margin-bottom: 24px; }
 
-  .glow-blob {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(80px);
-    pointer-events: none;
-    z-index: 0;
-  }
-  .glow-blob.a { width: 400px; height: 400px; background: #9b5de520; top: -100px; left: -100px; }
-  .glow-blob.b { width: 300px; height: 300px; background: #3a86ff18; bottom: -50px; right: -50px; }
+/* ── Form ── */
+.field { margin-bottom: 16px; }
+label { display: block; font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin-bottom: 7px; }
+input[type=text] {
+  width: 100%; padding: 13px 16px;
+  background: #0a0a16; border: 1px solid var(--border); border-radius: 11px;
+  color: var(--text); font-size: .95rem; font-family: inherit; outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+input[type=text]:focus { border-color: var(--orange); box-shadow: 0 0 0 3px #ff6b3520; }
 
-  .container {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 520px;
-  }
+/* ── Buttons ── */
+.btn {
+  width: 100%; padding: 14px; border: none; border-radius: 11px;
+  font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .95rem;
+  cursor: pointer; transition: all .2s;
+}
+.btn-primary { background: linear-gradient(135deg, var(--orange), var(--yellow)); color: #fff; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px #ff6b3540; }
+.btn-primary:active { transform: translateY(0); }
+.btn-save { background: linear-gradient(135deg, #3a86ff, #9b5de5); color: #fff; }
+.btn-save:hover { transform: translateY(-2px); box-shadow: 0 8px 24px #3a86ff40; }
+.btn-load { background: linear-gradient(135deg, var(--teal), var(--green)); color: #fff; }
+.btn-load:hover { transform: translateY(-2px); box-shadow: 0 8px 24px #44c8b040; }
+.btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--muted); margin-top: 10px; }
+.btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
 
-  /* Header */
-  .header {
-    text-align: center;
-    margin-bottom: 40px;
-    animation: fadeUp 0.6s ease both;
-  }
+/* ── Alert ── */
+.alert { border-radius: 10px; padding: 13px 16px; font-size: .85rem; margin-top: 14px; line-height: 1.5; animation: up .3s ease both; }
+.alert-error  { background: #ef476f15; border: 1px solid #ef476f44; color: #ef476f; }
+.alert-success{ background: #06d6a015; border: 1px solid #06d6a044; color: #06d6a0; }
+.alert-info   { background: #3a86ff15; border: 1px solid #3a86ff44; color: #7ab3ff; }
+.alert-warn   { background: #ffca3a15; border: 1px solid #ffca3a44; color: #ffca3a; }
 
-  .logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: linear-gradient(135deg, var(--scratch-orange), var(--scratch-yellow));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 900;
-    font-size: 2.4rem;
-    letter-spacing: -1px;
-  }
+/* ── User badge ── */
+.user-badge {
+  display: flex; align-items: center; gap: 14px;
+  background: #0a0a16; border: 1px solid var(--border); border-radius: 14px;
+  padding: 14px 18px; margin-bottom: 24px;
+}
+.user-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--yellow));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; flex-shrink: 0;
+}
+.user-name { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.1rem; }
+.user-label { font-size: .75rem; color: var(--muted); }
 
-  .logo-icon {
-    font-size: 2rem;
-    -webkit-text-fill-color: initial;
-  }
+/* ── Save info panel ── */
+.save-info {
+  background: #0a0a16; border: 1px solid var(--border); border-radius: 13px;
+  padding: 16px 18px; margin-bottom: 20px;
+}
+.save-info-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.save-info-row:last-child { margin-bottom: 0; }
+.save-info-label { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; }
+.save-info-val { font-size: .88rem; font-weight: 700; font-family: 'Nunito', sans-serif; }
+.save-info-val.green { color: var(--green); }
+.save-info-val.muted { color: var(--muted); }
 
-  .tagline {
-    color: var(--muted);
-    font-size: 0.9rem;
-    margin-top: 6px;
-    letter-spacing: 0.5px;
-  }
+.data-preview {
+  background: #070710; border: 1px dashed var(--border); border-radius: 10px;
+  padding: 12px 14px; font-family: monospace; font-size: .78rem; color: #aaaacc;
+  word-break: break-all; max-height: 80px; overflow-y: auto; margin-top: 10px;
+  line-height: 1.5;
+}
 
-  /* Steps indicator */
-  .steps {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
-    margin-bottom: 32px;
-    animation: fadeUp 0.6s ease 0.1s both;
-  }
+/* ── Divider ── */
+.divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--muted); font-size: .78rem; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  .step-dot {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 0.85rem;
-    font-family: 'Nunito', sans-serif;
-    transition: all 0.4s ease;
-    border: 2px solid var(--card-border);
-    background: var(--card-bg);
-    color: var(--muted);
-    position: relative;
-    z-index: 1;
-  }
-  .step-dot.active {
-    background: linear-gradient(135deg, var(--scratch-orange), var(--scratch-yellow));
-    border-color: transparent;
-    color: #fff;
-    box-shadow: 0 0 20px #ff6b3555;
-  }
-  .step-dot.done {
-    background: var(--success);
-    border-color: transparent;
-    color: #fff;
-  }
+/* ── Steps (auth) ── */
+.steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 28px; }
+.sdot {
+  width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: .8rem; font-family: 'Nunito', sans-serif;
+  border: 2px solid var(--border); background: var(--card); color: var(--muted); transition: all .3s;
+}
+.sdot.active { background: linear-gradient(135deg, var(--orange), var(--yellow)); border-color: transparent; color: #fff; box-shadow: 0 0 16px #ff6b3555; }
+.sdot.done { background: var(--green); border-color: transparent; color: #fff; }
+.sline { height: 2px; width: 50px; background: var(--border); transition: background .3s; }
+.sline.active { background: linear-gradient(to right, var(--orange), var(--yellow)); }
 
-  .step-line {
-    height: 2px;
-    width: 60px;
-    background: var(--card-border);
-    transition: background 0.4s ease;
-  }
-  .step-line.active { background: linear-gradient(to right, var(--scratch-orange), var(--scratch-yellow)); }
+/* ── Code box ── */
+.code-box {
+  background: #070710; border: 2px dashed var(--yellow); border-radius: 14px;
+  padding: 24px; text-align: center; margin-bottom: 20px;
+}
+.code-val {
+  font-family: 'Nunito', monospace; font-weight: 900; font-size: 2.6rem; letter-spacing: 8px;
+  background: linear-gradient(135deg, var(--yellow), var(--orange));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: pulse 2s infinite;
+}
+.copy-btn {
+  background: #ffffff10; border: 1px solid var(--border); color: var(--text);
+  border-radius: 8px; padding: 5px 14px; font-size: .78rem; font-family: 'Nunito', sans-serif;
+  font-weight: 700; cursor: pointer; transition: all .2s; margin-top: 10px;
+}
+.copy-btn:hover { background: #ffffff20; }
 
-  /* Card */
-  .card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 20px;
-    padding: 36px;
-    animation: fadeUp 0.6s ease 0.15s both;
-    position: relative;
-    overflow: hidden;
-  }
+/* ── Instructions ── */
+.inst-list { background: #0a0a16; border-radius: 11px; padding: 18px; margin-bottom: 20px; }
+.inst-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
+.inst-row:last-child { margin-bottom: 0; }
+.inst-n {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; margin-top: 2px;
+  background: linear-gradient(135deg, var(--purple), var(--blue));
+  display: flex; align-items: center; justify-content: center; font-size: .7rem; font-weight: 900; font-family: 'Nunito', sans-serif;
+}
+.inst-t { font-size: .88rem; color: #cccce0; line-height: 1.6; }
+.inst-t a { color: var(--teal); font-weight: 700; }
 
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--scratch-orange), var(--scratch-yellow), var(--scratch-teal));
-  }
+/* ── Timer ── */
+.timer { text-align: center; font-size: .8rem; color: var(--muted); margin-top: 10px; }
+.timer span { color: var(--yellow); font-weight: 700; }
 
-  .panel { display: none; }
-  .panel.active { display: block; animation: panelIn 0.4s ease both; }
+/* ── Spinner ── */
+.sp { display: inline-block; width: 16px; height: 16px; border: 2px solid #fff4; border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 7px; }
 
-  @keyframes panelIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+/* ── Section tab ── */
+.tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+.tab {
+  flex: 1; padding: 11px; border-radius: 10px; border: 1px solid var(--border);
+  background: transparent; color: var(--muted); font-family: 'Nunito', sans-serif;
+  font-weight: 700; font-size: .88rem; cursor: pointer; transition: all .2s; text-align: center;
+}
+.tab.active { background: linear-gradient(135deg, var(--orange)22, var(--yellow)22); border-color: var(--orange); color: var(--text); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: up .3s ease both; }
 
-  .panel-title {
-    font-family: 'Nunito', sans-serif;
-    font-weight: 900;
-    font-size: 1.4rem;
-    margin-bottom: 6px;
-  }
-  .panel-sub {
-    color: var(--muted);
-    font-size: 0.9rem;
-    line-height: 1.6;
-    margin-bottom: 28px;
-  }
+/* ── Config toggle ── */
+.config-toggle { background: none; border: none; color: var(--muted); font-size: .75rem; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; font-family: inherit; }
+.config-toggle:hover { color: var(--text); }
+.config-box { background: var(--card); border: 1px solid var(--border); border-radius: 13px; padding: 18px; margin-top: 10px; display: none; animation: up .3s ease both; }
+.config-box.open { display: block; }
+.config-note { font-size: .75rem; color: var(--muted); margin-top: 6px; line-height: 1.5; }
 
-  /* Input */
-  .input-group { margin-bottom: 20px; }
+/* ── Success ── */
+.success-icon { text-align: center; font-size: 3.5rem; margin-bottom: 14px; animation: bounce .6s cubic-bezier(.36,.07,.19,.97) both; }
+.success-title { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.5rem; text-align: center; background: linear-gradient(135deg, var(--green), var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 6px; }
 
-  label {
-    display: block;
-    font-size: 0.82rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
+/* ── Animations ── */
+@keyframes up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .65; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes bounce { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }
 
-  input[type="text"] {
-    width: 100%;
-    padding: 14px 18px;
-    background: #12121f;
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    color: var(--text);
-    font-size: 1rem;
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
+/* ── Panels ── */
+.panel { display: none; }
+.panel.active { display: block; animation: up .35s ease both; }
 
-  input[type="text"]:focus {
-    border-color: var(--scratch-orange);
-    box-shadow: 0 0 0 3px #ff6b3520;
-  }
+/* ── Section header ── */
+.section-label {
+  font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* Button */
-  .btn {
-    width: 100%;
-    padding: 15px;
-    border: none;
-    border-radius: 12px;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 900;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
-  }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-  .btn-primary {
-    background: linear-gradient(135deg, var(--scratch-orange), var(--scratch-yellow));
-    color: #fff;
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px #ff6b3540;
-  }
-
-  .btn-primary:active { transform: translateY(0); }
-
-  .btn-secondary {
-    background: transparent;
-    border: 1px solid var(--card-border);
-    color: var(--muted);
-    margin-top: 10px;
-  }
-  .btn-secondary:hover { border-color: var(--scratch-teal); color: var(--scratch-teal); }
-
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
-
-  /* Code display */
-  .code-box {
-    background: #0a0a14;
-    border: 2px dashed var(--scratch-yellow);
-    border-radius: 16px;
-    padding: 28px;
-    text-align: center;
-    margin-bottom: 24px;
-  }
-
-  .code-label {
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--muted);
-    margin-bottom: 10px;
-  }
-
-  .code-value {
-    font-family: 'Nunito', monospace;
-    font-weight: 900;
-    font-size: 2.8rem;
-    letter-spacing: 8px;
-    background: linear-gradient(135deg, var(--scratch-yellow), var(--scratch-orange));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-  }
-
-  /* Instructions */
-  .instructions {
-    background: #12121f;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 24px;
-  }
-
-  .inst-step {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    margin-bottom: 14px;
-  }
-  .inst-step:last-child { margin-bottom: 0; }
-
-  .inst-num {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--scratch-purple), var(--scratch-blue));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-    font-weight: 900;
-    font-family: 'Nunito', sans-serif;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-
-  .inst-text {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: #cccce0;
-  }
-
-  .project-link {
-    display: inline-block;
-    color: var(--scratch-teal);
-    font-weight: 700;
-    text-decoration: none;
-    border-bottom: 1px solid #44c8b044;
-    transition: border-color 0.2s;
-  }
-  .project-link:hover { border-color: var(--scratch-teal); }
-
-  /* Timer */
-  .timer {
-    text-align: center;
-    font-size: 0.82rem;
-    color: var(--muted);
-    margin-top: 12px;
-  }
-  .timer span {
-    color: var(--scratch-yellow);
-    font-weight: 700;
-  }
-
-  /* Alert */
-  .alert {
-    border-radius: 10px;
-    padding: 14px 18px;
-    font-size: 0.88rem;
-    margin-top: 16px;
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    animation: fadeUp 0.3s ease both;
-  }
-  .alert-error { background: #ef476f18; border: 1px solid #ef476f44; color: #ef476f; }
-  .alert-success { background: #06d6a018; border: 1px solid #06d6a044; color: #06d6a0; }
-  .alert-info { background: #3a86ff18; border: 1px solid #3a86ff44; color: #7ab3ff; }
-
-  /* Success panel */
-  .success-icon {
-    text-align: center;
-    font-size: 4rem;
-    margin-bottom: 16px;
-    animation: bounceIn 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-  }
-
-  @keyframes bounceIn {
-    0% { transform: scale(0); opacity: 0; }
-    60% { transform: scale(1.15); }
-    100% { transform: scale(1); opacity: 1; }
-  }
-
-  .success-name {
-    font-family: 'Nunito', sans-serif;
-    font-weight: 900;
-    font-size: 1.6rem;
-    text-align: center;
-    background: linear-gradient(135deg, var(--success), var(--scratch-teal));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 8px;
-  }
-
-  .success-sub {
-    text-align: center;
-    color: var(--muted);
-    font-size: 0.9rem;
-    margin-bottom: 28px;
-  }
-
-  .verified-badge {
-    background: #06d6a015;
-    border: 1px solid #06d6a040;
-    border-radius: 12px;
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 24px;
-  }
-
-  .badge-icon { font-size: 1.8rem; }
-  .badge-text { font-size: 0.88rem; color: #cccce0; line-height: 1.5; }
-  .badge-name { font-weight: 700; color: var(--success); }
-
-  /* Spinner */
-  .spinner {
-    display: inline-block;
-    width: 18px; height: 18px;
-    border: 2px solid #ffffff44;
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    vertical-align: middle;
-    margin-right: 8px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Animations */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Config section */
-  .config-bar {
-    text-align: center;
-    margin-top: 24px;
-    animation: fadeUp 0.6s ease 0.2s both;
-  }
-
-  .config-toggle {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 0.78rem;
-    cursor: pointer;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    font-family: inherit;
-    transition: color 0.2s;
-  }
-  .config-toggle:hover { color: var(--text); }
-
-  .config-panel {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 14px;
-    padding: 20px;
-    margin-top: 12px;
-    display: none;
-    animation: fadeUp 0.3s ease both;
-  }
-  .config-panel.open { display: block; }
-  .config-panel label { text-align: left; }
-  .config-panel input { margin-top: 0; }
-  .config-note { font-size: 0.78rem; color: var(--muted); margin-top: 8px; line-height: 1.5; }
-
-  .copy-btn {
-    background: #ffffff10;
-    border: 1px solid var(--card-border);
-    color: var(--text);
-    border-radius: 8px;
-    padding: 6px 14px;
-    font-size: 0.8rem;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 12px;
-  }
-  .copy-btn:hover { background: #ffffff20; }
+.footer-note { text-align: center; color: var(--muted); font-size: .72rem; margin-top: 20px; animation: up .6s ease .2s both; }
+.footer-note a { color: var(--teal); }
 </style>
 </head>
 <body>
 
-<div class="glow-blob a"></div>
-<div class="glow-blob b"></div>
+<div class="blob a"></div>
+<div class="blob b"></div>
+<div class="blob c"></div>
 
-<div class="container">
+<div class="wrap">
 
   <!-- Header -->
   <div class="header">
-    <div class="logo">
-      <span class="logo-icon">🐱</span> ScratchLink
+    <div class="logo"> ScratchSave</div>
+    <div class="tagline">Scratchゲームのセーブデータをクラウドで管理</div>
+  </div>
+
+  <!-- ══════════ AUTH FLOW ══════════ -->
+  <div id="authSection">
+
+    <!-- Step indicator -->
+    <div class="steps" style="margin-bottom:20px">
+      <div class="sdot active" id="sdot1">1</div>
+      <div class="sline" id="sline1"></div>
+      <div class="sdot" id="sdot2">2</div>
+      <div class="sline" id="sline2"></div>
+      <div class="sdot" id="sdot3">3</div>
     </div>
-    <div class="tagline">Scratchアカウントを安全に認証・連携</div>
-  </div>
 
-  <!-- Steps -->
-  <div class="steps" id="stepsBar">
-    <div class="step-dot active" id="dot1">1</div>
-    <div class="step-line" id="line1"></div>
-    <div class="step-dot" id="dot2">2</div>
-    <div class="step-line" id="line2"></div>
-    <div class="step-dot" id="dot3">3</div>
-  </div>
-
-  <!-- Card -->
-  <div class="card">
-
-    <!-- Panel 1: Username input -->
-    <div class="panel active" id="panel1">
-      <div class="panel-title">👤 Scratchユーザー名を入力</div>
-      <div class="panel-sub">あなたのScratchのユーザー名を入力してください。<br>大文字・小文字は区別されません。</div>
-      <div class="input-group">
+    <!-- Panel 1: Username -->
+    <div class="card panel active" id="apanel1">
+      <div class="card-title">👤 Scratchユーザー名を入力</div>
+      <div class="card-sub">ログインしているScratchアカウントのユーザー名を入力してください。</div>
+      <div class="field">
         <label>Scratchユーザー名</label>
-        <input type="text" id="usernameInput" placeholder="例: griffpatch" autocomplete="off" spellcheck="false">
+        <input type="text" id="authUsername" placeholder="例: griffpatch" autocomplete="off" spellcheck="false">
       </div>
-      <button class="btn btn-primary" id="step1Btn" onclick="step1()">確認コードを取得 →</button>
-      <div id="alert1"></div>
+      <button class="btn btn-primary" id="authStep1Btn" onclick="authStep1()">確認コードを取得 →</button>
+      <div id="authAlert1"></div>
     </div>
 
-    <!-- Panel 2: Instructions -->
-    <div class="panel" id="panel2">
-      <div class="panel-title">🔑 確認コードを入力</div>
-      <div class="panel-sub">以下の確認コードを、Scratchの連携用作品にコメントしてください。</div>
+    <!-- Panel 2: Comment verification -->
+    <div class="card panel" id="apanel2">
+      <div class="card-title"> 確認コードをコメント</div>
+      <div class="card-sub">以下のコードを連携用プロジェクトにコメントしてください。</div>
 
       <div class="code-box">
-        <div class="code-label">あなたの確認コード</div>
-        <div class="code-value" id="codeDisplay">------</div>
-        <button class="copy-btn" onclick="copyCode()">📋 コピー</button>
+        <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">確認コード</div>
+        <div class="code-val" id="authCode">------</div>
+        <button class="copy-btn" onclick="copyAuthCode()"> コピー</button>
       </div>
 
-      <div class="instructions">
-        <div class="inst-step">
-          <div class="inst-num">1</div>
-          <div class="inst-text">
-            <a href="#" class="project-link" id="projectLink" target="_blank">連携用Scratchプロジェクト</a>を開く
-          </div>
+      <div class="inst-list">
+        <div class="inst-row">
+          <div class="inst-n">1</div>
+          <div class="inst-t"><a href="#" id="authProjLink" target="_blank">連携用プロジェクト</a>を開く</div>
         </div>
-        <div class="inst-step">
-          <div class="inst-num">2</div>
-          <div class="inst-text">プロジェクトページのコメント欄に、上の確認コード（数字のみ）をコメントする</div>
+        <div class="inst-row">
+          <div class="inst-n">2</div>
+          <div class="inst-t">コメント欄に上の数字（6桁）をコメントする</div>
         </div>
-        <div class="inst-step">
-          <div class="inst-num">3</div>
-          <div class="inst-text">コメントを送信したら、下の「認証する」ボタンを押す</div>
+        <div class="inst-row">
+          <div class="inst-n">3</div>
+          <div class="inst-t">送信したら「認証する」を押す</div>
         </div>
       </div>
 
-      <button class="btn btn-primary" id="step2Btn" onclick="step2()">✅ 認証する</button>
-      <button class="btn btn-secondary" onclick="goBack()">← やり直す</button>
-      <div class="timer" id="timerDisplay"></div>
-      <div id="alert2"></div>
+      <button class="btn btn-primary" id="authStep2Btn" onclick="authStep2()"> 認証する</button>
+      <button class="btn btn-ghost" onclick="authGoBack()">← やり直す</button>
+      <div class="timer" id="authTimer"></div>
+      <div id="authAlert2"></div>
     </div>
 
-    <!-- Panel 3: Success -->
-    <div class="panel" id="panel3">
+    <!-- Panel 3: Auth success → go to dashboard -->
+    <div class="card panel" id="apanel3">
       <div class="success-icon">🎉</div>
-      <div class="success-name" id="successName"></div>
-      <div class="success-sub">Scratchアカウントの連携が完了しました！</div>
-      <div class="verified-badge">
-        <div class="badge-icon">✅</div>
-        <div class="badge-text">
-          <span class="badge-name" id="badgeName"></span> として認証済み<br>
-          <small style="color: var(--muted)">認証日時: <span id="authTime"></span></small>
-        </div>
-      </div>
-      <button class="btn btn-primary" onclick="resetAll()">🔄 別のアカウントで連携</button>
+      <div class="success-title" id="authSuccessTitle"></div>
+      <div style="text-align:center;color:var(--muted);font-size:.88rem;margin-bottom:24px">認証完了！セーブマネージャーへ進めます。</div>
+      <button class="btn btn-primary" onclick="showDashboard()">セーブマネージャーへ →</button>
     </div>
 
   </div>
 
-  <!-- Config -->
-  <div class="config-bar">
-    <button class="config-toggle" onclick="toggleConfig()">⚙ 設定（プロジェクトIDを変更）</button>
-    <div class="config-panel" id="configPanel">
-      <label>連携用ScratchプロジェクトID</label>
-      <div style="margin-top: 8px;">
-        <input type="text" id="projectIdInput" placeholder="例: 1290149475" value="1290149475" style="margin-bottom: 0;">
-      </div>
-      <div class="config-note">
-        ※ Scratchで連携用のプロジェクトを作成し、そのプロジェクトIDをここに入力してください。<br>
-        プロジェクトIDはURLの数字部分です: scratch.mit.edu/projects/<strong>プロジェクトID</strong>
+  <!-- ══════════ DASHBOARD ══════════ -->
+  <div id="dashSection" style="display:none">
+
+    <!-- User badge -->
+    <div class="card" style="padding:20px 24px">
+      <div class="user-badge" style="margin-bottom:0">
+        <div class="user-avatar">🐱</div>
+        <div>
+          <div class="user-name" id="dashUsername"></div>
+          <div class="user-label">認証済みアカウント</div>
+        </div>
+        <button onclick="logout()" style="margin-left:auto;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:6px 12px;font-size:.75rem;cursor:pointer;font-family:inherit">ログアウト</button>
       </div>
     </div>
+
+    <!-- Save/Load tabs -->
+    <div class="card">
+      <div class="tabs">
+        <button class="tab active" id="tabSave" onclick="switchTab('save')"> 保存</button>
+        <button class="tab" id="tabLoad" onclick="switchTab('load')"> 読み込み</button>
+        <button class="tab" id="tabInfo" onclick="switchTab('info')">セーブ情報</button>
+      </div>
+
+      <!-- Save tab -->
+      <div class="tab-panel active" id="tpSave">
+        <div class="card-sub" style="margin-bottom:20px">Scratchで保存操作をした後、「保存する」を押してください。クラウド変数の値を読み取りサーバーに保存します。</div>
+
+        <div class="section-label">設定</div>
+        <div class="row2">
+          <div class="field">
+            <label>プロジェクトID</label>
+            <input type="text" id="saveProjectId" placeholder="例: 1290149475">
+          </div>
+          <div class="field">
+            <label>保存用変数名</label>
+            <input type="text" id="saveVarName" placeholder="例: SAVE_DATA">
+          </div>
+        </div>
+
+        <div class="alert alert-info" style="margin-bottom:16px">
+          ⚠ 先にScratchの作品を開き、保存ボタンを押して <strong>☁ SAVE_DATA</strong> に値をセットしてください。
+        </div>
+
+        <button class="btn btn-save" id="saveBtn" onclick="doSave()"> 保存する</button>
+        <div id="saveAlert"></div>
+      </div>
+
+      <!-- Load tab -->
+      <div class="tab-panel" id="tpLoad">
+        <div class="card-sub" style="margin-bottom:20px">「読み込む」を押すと、サーバーのセーブデータをクラウド変数に書き込みます。その後Scratchで読み込みボタンを押してください。</div>
+
+        <div class="section-label">設定</div>
+        <div class="row2">
+          <div class="field">
+            <label>プロジェクトID</label>
+            <input type="text" id="loadProjectId" placeholder="例: 1290149475">
+          </div>
+          <div class="field">
+            <label>読み込み用変数名</label>
+            <input type="text" id="loadVarName" placeholder="例: LOAD_DATA">
+          </div>
+        </div>
+
+        <button class="btn btn-load" id="loadBtn" onclick="doLoad()">読み込む</button>
+        <div id="loadAlert"></div>
+      </div>
+
+      <!-- Info tab -->
+      <div class="tab-panel" id="tpInfo">
+        <div class="card-sub" style="margin-bottom:20px">サーバーに保存されているデータを確認します。</div>
+
+        <div class="row2" style="margin-bottom:16px">
+          <div class="field">
+            <label>プロジェクトID</label>
+            <input type="text" id="infoProjectId" placeholder="例: 1290149475">
+          </div>
+          <div style="display:flex;align-items:flex-end;padding-bottom:0">
+            <button class="btn btn-primary" style="padding:13px" onclick="fetchInfo()">確認</button>
+          </div>
+        </div>
+
+        <div id="infoResult"></div>
+      </div>
+    </div>
+
+    <!-- Settings (worker URL) -->
+    <div style="text-align:center">
+      <button class="config-toggle" onclick="document.getElementById('cfgBox').classList.toggle('open')">⚙ Workerの設定</button>
+      <div class="config-box" id="cfgBox">
+        <div class="field">
+          <label>Cloudflare Worker URL</label>
+          <input type="text" id="workerUrl" placeholder="https://xxxx.workers.dev">
+        </div>
+        <div class="config-note">Cloudflare WorkerのURLを入力してください。<br>例: https://plain-frost-317e.kanamoto-mac.workers.dev</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-note">
+    セーブデータはCloudflare KVに安全に保存されます<br>
+    認証にはプロジェクト <a href="#" id="footerLink" target="_blank">#<span id="footerPid">...</span></a> を使用
   </div>
 
 </div>
 
 <script>
-  // ─── State ───────────────────────────────────────
-  let currentUser = '';
-  let currentCode = '';
-  let expiresAt = null;
-  let timerInterval = null;
+// ── Config ───────────────────────────────────────────────
+const DEFAULT_PROJECT_ID = '1290149475';
+const AUTH_PROJECT_ID = DEFAULT_PROJECT_ID;
+let WORKER_URL = localStorage.getItem('workerUrl') || 'https://plain-frost-317e.kanamoto-mac.workers.dev';
 
-  // ─── Scratch API (Cloudflare Worker経由) ──────────
-  const PROXY = 'https://plain-frost-317e.kanamoto-mac.workers.dev';
-  async function scratchFetch(path) {
-    const res = await fetch(PROXY + path);
-    if (!res.ok) {
-      const err = new Error('HTTP ' + res.status);
-      err.status = res.status;
-      throw err;
+// ── State ─────────────────────────────────────────────────
+let currentUser = '';
+let authCode = '';
+let authExpiry = null;
+let authTimer = null;
+
+// ── Init ──────────────────────────────────────────────────
+window.onload = () => {
+  document.getElementById('authProjLink').href = `https://scratch.mit.edu/projects/${AUTH_PROJECT_ID}/`;
+  document.getElementById('footerLink').href = `https://scratch.mit.edu/projects/${AUTH_PROJECT_ID}/`;
+  document.getElementById('footerPid').textContent = AUTH_PROJECT_ID;
+  document.getElementById('workerUrl').value = WORKER_URL;
+  document.getElementById('workerUrl').oninput = () => {
+    WORKER_URL = document.getElementById('workerUrl').value.trim();
+    localStorage.setItem('workerUrl', WORKER_URL);
+  };
+  // Default project IDs
+  [document.getElementById('saveProjectId'),
+   document.getElementById('loadProjectId'),
+   document.getElementById('infoProjectId')].forEach(el => el.value = DEFAULT_PROJECT_ID);
+};
+
+// ── Helpers ───────────────────────────────────────────────
+function showAlert(id, msg, type = 'error') {
+  document.getElementById(id).innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+}
+function clearAlert(id) { document.getElementById(id).innerHTML = ''; }
+
+async function workerFetch(path, opts = {}) {
+  const url = WORKER_URL.replace(/\/$/, '') + path;
+  const res = await fetch(url, opts);
+  return res.json();
+}
+
+function setAuthStep(n) {
+  ['apanel1','apanel2','apanel3'].forEach((p,i) =>
+    document.getElementById(p).classList.toggle('active', i+1===n));
+  for (let i=1;i<=3;i++) {
+    const d = document.getElementById(`sdot${i}`);
+    d.className = 'sdot' + (i<n?' done':i===n?' active':'');
+    d.textContent = i<n ? '✓' : i;
+  }
+  for (let i=1;i<=2;i++) {
+    document.getElementById(`sline${i}`).className = 'sline' + (i<n?' active':'');
+  }
+}
+
+// ── Auth Step 1 ───────────────────────────────────────────
+async function authStep1() {
+  const input = document.getElementById('authUsername').value.trim();
+  if (!input) { showAlert('authAlert1','⚠ ユーザー名を入力してください'); return; }
+  if (!/^[a-zA-Z0-9_-]{3,20}$/.test(input)) {
+    showAlert('authAlert1','⚠ 有効なユーザー名を入力してください（3〜20文字）'); return;
+  }
+
+  const btn = document.getElementById('authStep1Btn');
+  btn.disabled = true; btn.innerHTML = '<span class="sp"></span>確認中...';
+  clearAlert('authAlert1');
+
+  try {
+    const data = await workerFetch(`/api/users/${encodeURIComponent(input)}`);
+    if (data.code === 404 || !data.username) throw Object.assign(new Error('not found'),{status:404});
+    currentUser = data.username;
+  } catch(e) {
+    if (e.status === 404) {
+      showAlert('authAlert1',`ユーザー「${input}」は存在しません`); 
+      btn.disabled=false; btn.textContent='確認コードを取得 →'; return;
     }
-    return res.json();
+    currentUser = input; // fallback
   }
 
-  // ─── Helpers ─────────────────────────────────────
-  function getProjectId() {
-    return document.getElementById('projectIdInput').value.trim() || '104';
-  }
+  authCode = String(Math.floor(100000 + Math.random() * 900000));
+  document.getElementById('authCode').textContent = authCode;
+  btn.disabled=false; btn.textContent='確認コードを取得 →';
+  setAuthStep(2);
+  startAuthTimer();
+}
 
-  function generateCode() {
-    return String(Math.floor(100000 + Math.random() * 900000));
-  }
-
-  function showAlert(panelNum, msg, type = 'error') {
-    const el = document.getElementById(`alert${panelNum}`);
-    el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
-  }
-
-  function clearAlert(panelNum) {
-    document.getElementById(`alert${panelNum}`).innerHTML = '';
-  }
-
-  function setStep(n) {
-    ['panel1','panel2','panel3'].forEach((p, i) => {
-      document.getElementById(p).classList.toggle('active', i + 1 === n);
-    });
-    // Update dots
-    for (let i = 1; i <= 3; i++) {
-      const dot = document.getElementById(`dot${i}`);
-      dot.className = 'step-dot' + (i < n ? ' done' : i === n ? ' active' : '');
-      if (i < n) dot.textContent = '✓';
-      else dot.textContent = i;
-    }
-    // Update lines
-    for (let i = 1; i <= 2; i++) {
-      document.getElementById(`line${i}`).className = 'step-line' + (i < n ? ' active' : '');
-    }
-  }
-
-  function startTimer() {
-    clearInterval(timerInterval);
-    expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
-    const display = document.getElementById('timerDisplay');
-    timerInterval = setInterval(() => {
-      const remaining = expiresAt - Date.now();
-      if (remaining <= 0) {
-        clearInterval(timerInterval);
-        display.innerHTML = '<span style="color:var(--error)">⏰ コードが期限切れになりました。やり直してください。</span>';
-        document.getElementById('step2Btn').disabled = true;
-        return;
-      }
-      const m = Math.floor(remaining / 60000);
-      const s = String(Math.floor((remaining % 60000) / 1000)).padStart(2, '0');
-      display.innerHTML = `有効期限: <span>${m}:${s}</span>`;
-    }, 1000);
-  }
-
-  function copyCode() {
-    navigator.clipboard.writeText(currentCode).then(() => {
-      const btn = document.querySelector('.copy-btn');
-      btn.textContent = '✅ コピーしました！';
-      setTimeout(() => btn.textContent = '📋 コピー', 2000);
-    });
-  }
-
-  function toggleConfig() {
-    document.getElementById('configPanel').classList.toggle('open');
-  }
-
-  function goBack() {
-    clearInterval(timerInterval);
-    clearAlert(1);
-    setStep(1);
-  }
-
-  function resetAll() {
-    currentUser = '';
-    currentCode = '';
-    clearInterval(timerInterval);
-    document.getElementById('usernameInput').value = '';
-    clearAlert(1);
-    clearAlert(2);
-    setStep(1);
-  }
-
-  // ─── Step 1: Generate code ────────────────────────
-  async function step1() {
-    const input = document.getElementById('usernameInput').value.trim();
-    if (!input) {
-      showAlert(1, '⚠ ユーザー名を入力してください。');
-      return;
-    }
-    if (!/^[a-zA-Z0-9_-]{3,20}$/.test(input)) {
-      showAlert(1, '⚠ 有効なScratchユーザー名を入力してください（3〜20文字、英数字・_・-のみ）。');
-      return;
-    }
-
-    const btn = document.getElementById('step1Btn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>確認中...';
-    clearAlert(1);
-
-    // Verify user exists (via CORS proxy)
-    try {
-      const data = await scratchFetch(`/users/${encodeURIComponent(input)}`);
-      currentUser = data.username; // Scratch側の正確な表記を使う
-    } catch(e) {
-      if (e.status === 404) {
-        showAlert(1, `❌ ユーザー「${input}」はScratchに存在しません。ユーザー名を確認してください。`);
-        btn.disabled = false;
-        btn.textContent = '確認コードを取得 →';
-        return;
-      }
-      // プロキシ自体のエラー → ユーザー名をそのまま使って続行
-      console.warn('User check failed:', e.message);
-      currentUser = input;
-    }
-
-    // Generate code
-    currentCode = generateCode();
-    const pid = getProjectId();
-    document.getElementById('codeDisplay').textContent = currentCode;
-    document.getElementById('projectLink').href = `https://scratch.mit.edu/projects/${pid}/`;
-    document.getElementById('step2Btn').disabled = false;
-
-    btn.disabled = false;
-    btn.textContent = '確認コードを取得 →';
-
-    setStep(2);
-    startTimer();
-  }
-
-  // ─── Step 2: Verify comment ───────────────────────
-  async function step2() {
-    if (!currentUser || !currentCode) return;
-
-    // Check expiry
-    if (Date.now() > expiresAt) {
-      showAlert(2, '⏰ コードが期限切れです。最初からやり直してください。');
-      return;
-    }
-
-    const btn = document.getElementById('step2Btn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>コメントを確認中...';
-    clearAlert(2);
-
-    const pid = getProjectId();
-    let found = false;
-
-    try {
-      // まずプロジェクト情報からオーナーのユーザー名を取得
-      const projectInfo = await scratchFetch(`/projects/${pid}`);
-      const owner = projectInfo.author?.username;
-      if (!owner) throw new Error('プロジェクトオーナーを取得できませんでした');
-
-      // 正しいエンドポイント: /users/{owner}/projects/{id}/comments
-      const comments = await scratchFetch(`/users/${owner}/projects/${pid}/comments?limit=40&offset=0`);
-
-      for (const c of comments) {
-        const authorName = c.author?.username || '';
-        const content = (c.content || '').trim();
-        if (
-          authorName.toLowerCase() === currentUser.toLowerCase() &&
-          content === currentCode
-        ) {
-          found = true;
-          break;
-        }
-      }
-    } catch(e) {
-      showAlert(2, `❌ コメントの確認中にエラーが発生しました。<br><small>${e.message}</small>`);
-      btn.disabled = false;
-      btn.innerHTML = '✅ 認証する';
-      return;
-    }
-
-    btn.disabled = false;
-    btn.innerHTML = '✅ 認証する';
-
-    if (found) {
-      clearInterval(timerInterval);
-      // Success!
-      document.getElementById('successName').textContent = `@${currentUser}`;
-      document.getElementById('badgeName').textContent = `@${currentUser}`;
-      document.getElementById('authTime').textContent = new Date().toLocaleString('ja-JP');
-      setStep(3);
+function startAuthTimer() {
+  clearInterval(authTimer);
+  authExpiry = Date.now() + 10*60*1000;
+  const el = document.getElementById('authTimer');
+  authTimer = setInterval(() => {
+    const r = authExpiry - Date.now();
+    if (r <= 0) {
+      clearInterval(authTimer);
+      el.innerHTML = '<span style="color:var(--red)">期限切れ。やり直してください。</span>';
+      document.getElementById('authStep2Btn').disabled = true;
     } else {
-      showAlert(2,
-        `❌ 確認コード「<strong>${currentCode}</strong>」のコメントが見つかりませんでした。<br>
-        <small>・コメントを送信したか確認してください<br>
-        ・ログインしているアカウントが <strong>${currentUser}</strong> であることを確認してください<br>
-        ・コメントが反映されるまで数秒かかることがあります</small>`
+      const m = Math.floor(r/60000), s = String(Math.floor((r%60000)/1000)).padStart(2,'0');
+      el.innerHTML = `有効期限: <span>${m}:${s}</span>`;
+    }
+  }, 1000);
+}
+
+// ── Auth Step 2 ───────────────────────────────────────────
+async function authStep2() {
+  if (Date.now() > authExpiry) { showAlert('authAlert2','期限切れです。やり直してください。'); return; }
+
+  const btn = document.getElementById('authStep2Btn');
+  btn.disabled = true; btn.innerHTML = '<span class="sp"></span>確認中...';
+  clearAlert('authAlert2');
+
+  try {
+    const logs = await workerFetch(`/cloudlogs?projectid=${AUTH_PROJECT_ID}`);
+    const hit = logs.find(l =>
+      l.user?.toLowerCase() === currentUser.toLowerCase() &&
+      (l.content || '').trim() === authCode
+    );
+
+    // コメントAPIのフォールバック
+    let found = !!hit;
+    if (!found) {
+      // コメントAPIでも確認
+      const comments = await workerFetch(`/api/users/${encodeURIComponent(currentUser)}/projects/${AUTH_PROJECT_ID}/comments?limit=40&offset=0`).catch(()=>[]);
+      found = Array.isArray(comments) && comments.some(c =>
+        c.author?.username?.toLowerCase() === currentUser.toLowerCase() &&
+        (c.content||'').trim() === authCode
       );
     }
+
+    if (found) {
+      clearInterval(authTimer);
+      document.getElementById('authSuccessTitle').textContent = `@${currentUser}`;
+      setAuthStep(3);
+    } else {
+      showAlert('authAlert2',` コード「<strong>${authCode}</strong>」のコメントが見つかりません。<br><small>コメントが反映されるまで数秒かかることがあります</small>`);
+      btn.disabled=false; btn.innerHTML='認証する';
+    }
+  } catch(e) {
+    showAlert('authAlert2',` 確認中にエラー: ${e.message}`);
+    btn.disabled=false; btn.innerHTML=' 認証する';
   }
+}
+
+function copyAuthCode() {
+  navigator.clipboard.writeText(authCode).then(() => {
+    const b = document.querySelector('.copy-btn'); b.textContent=' コピー完了';
+    setTimeout(()=>b.textContent=' コピー', 2000);
+  });
+}
+
+function authGoBack() { clearInterval(authTimer); clearAlert('authAlert1'); setAuthStep(1); }
+
+// ── Dashboard ──────────────────────────────────────────────
+function showDashboard() {
+  document.getElementById('authSection').style.display = 'none';
+  document.getElementById('dashSection').style.display = 'block';
+  document.getElementById('dashSection').style.animation = 'up .5s ease both';
+  document.getElementById('dashUsername').textContent = `@${currentUser}`;
+}
+
+function logout() {
+  currentUser = ''; authCode = '';
+  document.getElementById('authUsername').value = '';
+  clearAlert('authAlert1'); clearAlert('authAlert2');
+  setAuthStep(1);
+  document.getElementById('dashSection').style.display = 'none';
+  document.getElementById('authSection').style.display = 'block';
+}
+
+function switchTab(name) {
+  ['save','load','info'].forEach(t => {
+    document.getElementById(`tab${t.charAt(0).toUpperCase()+t.slice(1)}`).classList.toggle('active', t===name);
+    document.getElementById(`tp${t.charAt(0).toUpperCase()+t.slice(1)}`).classList.toggle('active', t===name);
+  });
+}
+
+// ── Save ──────────────────────────────────────────────────
+async function doSave() {
+  const projectId = document.getElementById('saveProjectId').value.trim();
+  const varName = document.getElementById('saveVarName').value.trim() || 'SAVE_DATA';
+  if (!projectId) { showAlert('saveAlert','⚠ プロジェクトIDを入力してください'); return; }
+
+  const btn = document.getElementById('saveBtn');
+  btn.disabled=true; btn.innerHTML='<span class="sp"></span>保存中...';
+  clearAlert('saveAlert');
+
+  try {
+    const res = await workerFetch('/save', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ username: currentUser, projectId, saveVarName: varName })
+    });
+
+    if (res.ok) {
+      const date = new Date(res.savedAt).toLocaleString('ja-JP');
+      showAlert('saveAlert',`保存しました！<br><small>保存日時: ${date}</small><br><small>データ: ${String(res.data).slice(0,60)}${String(res.data).length>60?'...':''}</small>`,'success');
+    } else {
+      showAlert('saveAlert',`${res.error}`);
+    }
+  } catch(e) {
+    showAlert('saveAlert',`通信エラー: ${e.message}`);
+  }
+
+  btn.disabled=false; btn.innerHTML='保存する';
+}
+
+// ── Load ──────────────────────────────────────────────────
+async function doLoad() {
+  const projectId = document.getElementById('loadProjectId').value.trim();
+  const varName = document.getElementById('loadVarName').value.trim() || 'LOAD_DATA';
+  if (!projectId) { showAlert('loadAlert','⚠ プロジェクトIDを入力してください'); return; }
+
+  const btn = document.getElementById('loadBtn');
+  btn.disabled=true; btn.innerHTML='<span class="sp"></span>読み込み中...';
+  clearAlert('loadAlert');
+
+  try {
+    const res = await workerFetch('/load', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ username: currentUser, projectId, loadVarName: varName })
+    });
+
+    if (res.ok) {
+      const date = new Date(res.savedAt).toLocaleString('ja-JP');
+      showAlert('loadAlert',`クラウド変数 ☁ ${varName} にデータを書き込みました！<br><small>保存日時: ${date}</small><br><small>Scratch側で読み込みボタンを押してください</small>`,'success');
+    } else {
+      showAlert('loadAlert', ${res.error}`);
+    }
+  } catch(e) {
+    showAlert('loadAlert',`通信エラー: ${e.message}`);
+  }
+
+  btn.disabled=false; btn.innerHTML='読み込む';
+}
+
+// ── Info ──────────────────────────────────────────────────
+async function fetchInfo() {
+  const projectId = document.getElementById('infoProjectId').value.trim();
+  if (!projectId) return;
+  document.getElementById('infoResult').innerHTML = '<div class="alert alert-info"><span class="sp"></span>確認中...</div>';
+
+  try {
+    const res = await workerFetch(`/saveinfo?username=${encodeURIComponent(currentUser)}&projectId=${projectId}`);
+    if (res.hasSave) {
+      const date = new Date(res.savedAt).toLocaleString('ja-JP');
+      document.getElementById('infoResult').innerHTML = `
+        <div class="save-info">
+          <div class="save-info-row">
+            <span class="save-info-label">ステータス</span>
+            <span class="save-info-val green">セーブあり</span>
+          </div>
+          <div class="save-info-row">
+            <span class="save-info-label">保存日時</span>
+            <span class="save-info-val">${date}</span>
+          </div>
+          <div class="save-info-row">
+            <span class="save-info-label">ユーザー</span>
+            <span class="save-info-val">@${currentUser}</span>
+          </div>
+        </div>
+        <div class="save-info-label" style="margin-bottom:6px">データプレビュー</div>
+        <div class="data-preview">${String(res.data||'').replace(/</g,'&lt;')}</div>
+      `;
+    } else {
+      document.getElementById('infoResult').innerHTML = '<div class="alert alert-warn">⚠ このプロジェクトのセーブデータはまだありません。</div>';
+    }
+  } catch(e) {
+    document.getElementById('infoResult').innerHTML = `<div class="alert alert-error"> ${e.message}</div>`;
+  }
+}
 </script>
 </body>
 </html>
