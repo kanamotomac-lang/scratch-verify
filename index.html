@@ -242,7 +242,7 @@ input[type=text]:focus { border-color: var(--orange); box-shadow: 0 0 0 3px #ff6
 
   <!-- Header -->
   <div class="header">
-    <div class="logo">🐱 ScratchSave</div>
+    <div class="logo">ScratchSave</div>
     <div class="tagline">Scratchゲームのセーブデータをクラウドで管理</div>
   </div>
 
@@ -260,7 +260,7 @@ input[type=text]:focus { border-color: var(--orange); box-shadow: 0 0 0 3px #ff6
 
     <!-- Panel 1: Username -->
     <div class="card panel active" id="apanel1">
-      <div class="card-title">👤 Scratchユーザー名を入力</div>
+      <div class="card-title">Scratchユーザー名を入力</div>
       <div class="card-sub">ログインしているScratchアカウントのユーザー名を入力してください。</div>
       <div class="field">
         <label>Scratchユーザー名</label>
@@ -272,13 +272,13 @@ input[type=text]:focus { border-color: var(--orange); box-shadow: 0 0 0 3px #ff6
 
     <!-- Panel 2: Comment verification -->
     <div class="card panel" id="apanel2">
-      <div class="card-title">🔑 確認コードをコメント</div>
+      <div class="card-title">確認コードをコメント</div>
       <div class="card-sub">以下のコードを連携用プロジェクトにコメントしてください。</div>
 
       <div class="code-box">
         <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">確認コード</div>
         <div class="code-val" id="authCode">------</div>
-        <button class="copy-btn" onclick="copyAuthCode()">📋 コピー</button>
+        <button class="copy-btn" onclick="copyAuthCode()">コピー</button>
       </div>
 
       <div class="inst-list">
@@ -296,7 +296,7 @@ input[type=text]:focus { border-color: var(--orange); box-shadow: 0 0 0 3px #ff6
         </div>
       </div>
 
-      <button class="btn btn-primary" id="authStep2Btn" onclick="authStep2()">✅ 認証する</button>
+      <button class="btn btn-primary" id="authStep2Btn" onclick="authStep2()">認証する</button>
       <button class="btn btn-ghost" onclick="authGoBack()">← やり直す</button>
       <div class="timer" id="authTimer"></div>
       <div id="authAlert2"></div>
@@ -330,9 +330,9 @@ input[type=text]:focus { border-color: var(--orange); box-shadow: 0 0 0 3px #ff6
     <!-- Save/Load tabs -->
     <div class="card">
       <div class="tabs">
-        <button class="tab active" id="tabSave" onclick="switchTab('save')">💾 保存</button>
-        <button class="tab" id="tabLoad" onclick="switchTab('load')">📂 読み込み</button>
-        <button class="tab" id="tabInfo" onclick="switchTab('info')">ℹ️ セーブ情報</button>
+        <button class="tab active" id="tabSave" onclick="switchTab('save')">保存</button>
+        <button class="tab" id="tabLoad" onclick="switchTab('load')"> 読み込み</button>
+        <button class="tab" id="tabInfo" onclick="switchTab('info')">セーブ情報</button>
       </div>
 
       <!-- Save tab -->
@@ -355,7 +355,7 @@ input[type=text]:focus { border-color: var(--orange); box-shadow: 0 0 0 3px #ff6
           ⚠ 先にScratchの作品を開き、保存ボタンを押して <strong>☁ SAVE_DATA</strong> に値をセットしてください。
         </div>
 
-        <button class="btn btn-save" id="saveBtn" onclick="doSave()">💾 保存する</button>
+        <button class="btn btn-save" id="saveBtn" onclick="doSave()">保存する</button>
         <div id="saveAlert"></div>
       </div>
 
@@ -375,7 +375,7 @@ input[type=text]:focus { border-color: var(--orange); box-shadow: 0 0 0 3px #ff6
           </div>
         </div>
 
-        <button class="btn btn-load" id="loadBtn" onclick="doLoad()">📂 読み込む</button>
+        <button class="btn btn-load" id="loadBtn" onclick="doLoad()">読み込む</button>
         <div id="loadAlert"></div>
       </div>
 
@@ -490,7 +490,7 @@ async function authStep1() {
     currentUser = data.username;
   } catch(e) {
     if (e.status === 404) {
-      showAlert('authAlert1',`❌ ユーザー「${input}」は存在しません`); 
+      showAlert('authAlert1',`ユーザー「${input}」は存在しません`); 
       btn.disabled=false; btn.textContent='確認コードを取得 →'; return;
     }
     currentUser = input; // fallback
@@ -511,7 +511,7 @@ function startAuthTimer() {
     const r = authExpiry - Date.now();
     if (r <= 0) {
       clearInterval(authTimer);
-      el.innerHTML = '<span style="color:var(--red)">⏰ 期限切れ。やり直してください。</span>';
+      el.innerHTML = '<span style="color:var(--red)">期限切れ。やり直してください。</span>';
       document.getElementById('authStep2Btn').disabled = true;
     } else {
       const m = Math.floor(r/60000), s = String(Math.floor((r%60000)/1000)).padStart(2,'0');
@@ -522,7 +522,7 @@ function startAuthTimer() {
 
 // ── Auth Step 2 ───────────────────────────────────────────
 async function authStep2() {
-  if (Date.now() > authExpiry) { showAlert('authAlert2','⏰ 期限切れです。やり直してください。'); return; }
+  if (Date.now() > authExpiry) { showAlert('authAlert2','期限切れです。やり直してください。'); return; }
 
   const btn = document.getElementById('authStep2Btn');
   btn.disabled = true; btn.innerHTML = '<span class="sp"></span>確認中...';
@@ -538,7 +538,7 @@ async function authStep2() {
     // コメントAPIのフォールバック
     let found = !!hit;
     if (!found) {
-        // ✅ 修正: 正しいオーナー名を使用
+        // 修正: 正しいオーナー名を使用
       const comments = await workerFetch(`/api/users/sub_0823ils_sub/projects/${AUTH_PROJECT_ID}/comments?limit=40&offset=0`).catch(()=>[]);
       found = Array.isArray(comments) && comments.some(c =>
         c.author?.username?.toLowerCase() === currentUser.toLowerCase() &&
@@ -551,19 +551,19 @@ async function authStep2() {
       document.getElementById('authSuccessTitle').textContent = `@${currentUser}`;
       setAuthStep(3);
     } else {
-      showAlert('authAlert2',`❌ コード「<strong>${authCode}</strong>」のコメントが見つかりません。<br><small>コメントが反映されるまで数秒かかることがあります</small>`);
-      btn.disabled=false; btn.innerHTML='✅ 認証する';
+      showAlert('authAlert2',`コード「<strong>${authCode}</strong>」のコメントが見つかりません。<br><small>コメントが反映されるまで数秒かかることがあります</small>`);
+      btn.disabled=false; btn.innerHTML='認証する';
     }
   } catch(e) {
-    showAlert('authAlert2',`❌ 確認中にエラー: ${e.message}`);
-    btn.disabled=false; btn.innerHTML='✅ 認証する';
+    showAlert('authAlert2',`確認中にエラー: ${e.message}`);
+    btn.disabled=false; btn.innerHTML='認証する';
   }
 }
 
 function copyAuthCode() {
   navigator.clipboard.writeText(authCode).then(() => {
-    const b = document.querySelector('.copy-btn'); b.textContent='✅ コピー完了';
-    setTimeout(()=>b.textContent='📋 コピー', 2000);
+    const b = document.querySelector('.copy-btn'); b.textContent='コピー完了';
+    setTimeout(()=>b.textContent='コピー', 2000);
   });
 }
 
@@ -612,15 +612,15 @@ async function doSave() {
 
     if (res.ok) {
       const date = new Date(res.savedAt).toLocaleString('ja-JP');
-      showAlert('saveAlert',`✅ 保存しました！<br><small>保存日時: ${date}</small><br><small>データ: ${String(res.data).slice(0,60)}${String(res.data).length>60?'...':''}</small>`,'success');
+      showAlert('saveAlert',`保存しました！<br><small>保存日時: ${date}</small><br><small>データ: ${String(res.data).slice(0,60)}${String(res.data).length>60?'...':''}</small>`,'success');
     } else {
-      showAlert('saveAlert',`❌ ${res.error}`);
+      showAlert('saveAlert',`${res.error}`);
     }
   } catch(e) {
-    showAlert('saveAlert',`❌ 通信エラー: ${e.message}`);
+    showAlert('saveAlert',`通信エラー: ${e.message}`);
   }
 
-  btn.disabled=false; btn.innerHTML='💾 保存する';
+  btn.disabled=false; btn.innerHTML='保存する';
 }
 
 // ── Load ──────────────────────────────────────────────────
@@ -642,15 +642,15 @@ async function doLoad() {
 
     if (res.ok) {
       const date = new Date(res.savedAt).toLocaleString('ja-JP');
-      showAlert('loadAlert',`✅ クラウド変数 ☁ ${varName} にデータを書き込みました！<br><small>保存日時: ${date}</small><br><small>Scratch側で読み込みボタンを押してください</small>`,'success');
+      showAlert('loadAlert',`クラウド変数 ☁ ${varName} にデータを書き込みました！<br><small>保存日時: ${date}</small><br><small>Scratch側で読み込みボタンを押してください</small>`,'success');
     } else {
-      showAlert('loadAlert',`❌ ${res.error}`);
+      showAlert('loadAlert',`${res.error}`);
     }
   } catch(e) {
-    showAlert('loadAlert',`❌ 通信エラー: ${e.message}`);
+    showAlert('loadAlert',`通信エラー: ${e.message}`);
   }
 
-  btn.disabled=false; btn.innerHTML='📂 読み込む';
+  btn.disabled=false; btn.innerHTML='読み込む';
 }
 
 // ── Info ──────────────────────────────────────────────────
@@ -667,7 +667,7 @@ async function fetchInfo() {
         <div class="save-info">
           <div class="save-info-row">
             <span class="save-info-label">ステータス</span>
-            <span class="save-info-val green">✅ セーブあり</span>
+            <span class="save-info-val green">セーブあり</span>
           </div>
           <div class="save-info-row">
             <span class="save-info-label">保存日時</span>
@@ -685,7 +685,7 @@ async function fetchInfo() {
       document.getElementById('infoResult').innerHTML = '<div class="alert alert-warn">⚠ このプロジェクトのセーブデータはまだありません。</div>';
     }
   } catch(e) {
-    document.getElementById('infoResult').innerHTML = `<div class="alert alert-error">❌ ${e.message}</div>`;
+    document.getElementById('infoResult').innerHTML = `<div class="alert alert-error">${e.message}</div>`;
   }
 }
 </script>
