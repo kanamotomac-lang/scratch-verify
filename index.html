@@ -422,8 +422,8 @@ input[type=text]:focus { border-color: var(--orange); box-shadow: 0 0 0 3px #ff6
 // ── Config ───────────────────────────────────────────────
 const DEFAULT_PROJECT_ID = '1290149475';
 const AUTH_PROJECT_ID = DEFAULT_PROJECT_ID;
-const AUTH_PROJECT_OWNER = 'kanamotomac-lang'; // ✅ 認証プロジェクトのオーナー名
 let WORKER_URL = localStorage.getItem('workerUrl') || 'https://plain-frost-317e.kanamoto-mac.workers.dev';
+
 
 // ── State ─────────────────────────────────────────────────
 let currentUser = '';
@@ -530,7 +530,7 @@ async function authStep2() {
 
   try {
     const logs = await workerFetch(`/cloudlogs?projectid=${AUTH_PROJECT_ID}`);
-    const hit = Array.isArray(logs) && logs.find(l =>
+    const hit = logs.find(l =>
       l.user?.toLowerCase() === currentUser.toLowerCase() &&
       (l.content || '').trim() === authCode
     );
@@ -538,8 +538,8 @@ async function authStep2() {
     // コメントAPIのフォールバック
     let found = !!hit;
     if (!found) {
-      // ✅ 修正: currentUser ではなく AUTH_PROJECT_OWNER（プロジェクトオーナー）を使用
-      const comments = await workerFetch(`/api/users/${encodeURIComponent(AUTH_PROJECT_OWNER)}/projects/${AUTH_PROJECT_ID}/comments?limit=40&offset=0`).catch(()=>[]);
+      // コメントAPIでも確認
+      const comments = await workerFetch(`/api/users/${encodeURIComponent(currentUser)}/projects/${AUTH_PROJECT_ID}/comments?limit=40&offset=0`).catch(()=>[]);
       found = Array.isArray(comments) && comments.some(c =>
         c.author?.username?.toLowerCase() === currentUser.toLowerCase() &&
         (c.content||'').trim() === authCode
