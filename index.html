@@ -244,17 +244,12 @@ body::before { content: ''; position: fixed; inset: 0; background-image: radial-
       <!-- プロジェクト一覧 -->
       <div class="proj-list" id="projList"></div>
 
-      <!-- クラウド変数パネル -->
+      <!-- 保存パネル -->
       <div id="varsPanel" style="display:none">
         <div class="vars-panel">
-          <div class="vars-panel-hd">
-            <div>
-              <div class="vars-panel-title" id="varsPanelTitle">クラウド変数</div>
-              <div class="vars-panel-sub" id="varsPanelSub"></div>
-            </div>
-            <button class="save-all-btn" id="saveAllBtn" onclick="saveVar(null)">💾 この変数を保存</button>
-          </div>
-          <div id="varList" class="var-list"><div class="loading"><span class="sp"></span>取得中...</div></div>
+          <div class="vars-panel-title" id="varsPanelTitle" style="margin-bottom:6px"></div>
+          <div class="vars-panel-sub" style="color:var(--muted);font-size:.82rem;margin-bottom:14px">先にScratchの作品を開き、保存ボタンを押して <strong id="varNameLabel"></strong> に値をセットしてください。</div>
+          <button class="save-all-btn" id="saveAllBtn" onclick="doSaveProject()" style="width:100%;padding:13px;font-size:.92rem">💾 保存する</button>
           <div id="varsAlert"></div>
         </div>
       </div>
@@ -295,6 +290,7 @@ let WORKER_URL = localStorage.getItem('workerUrl') || 'https://plain-frost-317e.
 let currentUser = localStorage.getItem('currentUser') || '';
 let myProjects = JSON.parse(localStorage.getItem('myProjects') || '[]');
 let selectedProj = null;
+let selectedVarName = 'SAVE_DATA';
 let authCode = '', authExpiry = null, authTimer = null;
 
 window.onload = () => {
@@ -426,7 +422,7 @@ async function selectProject(pid, varName) {
   const panel = document.getElementById('varsPanel');
   panel.style.display = 'block';
   document.getElementById('varsPanelTitle').textContent = `プロジェクト ${pid} のクラウド変数`;
-  document.getElementById('varsPanelSub').textContent = `☁ ${varName} を保存対象に設定`;
+  document.getElementById('varsPanelSub').textContent = '変数が変わると自動的にサーバーへ保存されます';
   document.getElementById('varList').innerHTML = '<div class="loading"><span class="sp"></span>取得中...</div>';
   clearAlert('varsAlert');
 
@@ -449,29 +445,13 @@ async function selectProject(pid, varName) {
         <div class="var-name">${escHtml(e.name)}</div>
         <div style="font-size:.7rem;color:var(--muted);flex-shrink:0">@${escHtml(e.user)}</div>
         <div class="var-value">${escHtml(String(e.value))}</div>
-        ${e.name==='☁ '+varName?`<button class="var-save-btn" onclick="saveVarEntry('${pid}','${escHtml(e.user)}','${escHtml(String(e.value))}')">💾 保存</button>`:''}
+        
       </div>`).join('');
   } catch(e) {
     document.getElementById('varList').innerHTML=`<div style="color:var(--red);font-size:.82rem;padding:8px">取得失敗: ${escHtml(e.message)}</div>`;
   }
 }
 
-async function saveVarEntry(projectId, username, value) {
-  if(!currentUser){showAlert('varsAlert','⚠ サインインしてください');return;}
-  if(username.toLowerCase()!==currentUser.toLowerCase()){showAlert('varsAlert','⚠ 自分のデータのみ保存できます');return;}
-  const btn = event.target;
-  btn.disabled=true;btn.innerHTML='<span class="sp"></span>';
-  clearAlert('varsAlert');
-  try {
-    const res = await workerFetch('/save',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({username,projectId,saveVarName:document.getElementById('varsPanelSub').textContent.replace('☁ ','').replace(' を保存対象に設定','')})
-    });
-    if(res.ok){showAlert('varsAlert',`✅ 保存しました！ ${new Date(res.savedAt).toLocaleString('ja-JP')}`,'success');loadPlayers();}
-    else showAlert('varsAlert',`❌ ${res.error}`);
-  }catch(e){showAlert('varsAlert',`❌ ${e.message}`);}
-  btn.disabled=false;btn.innerHTML='💾 保存';
-}
 
 // ── 全プレイヤー一覧 ────────────────────────────────────
 async function loadPlayers() {
