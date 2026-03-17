@@ -13,45 +13,18 @@
   --border: #252540; --text: #f0f0ff; --muted: #7777aa;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Noto Sans JP','Nunito',sans-serif;
-  background: var(--bg); color: var(--text);
-  min-height: 100vh; overflow-x: hidden;
-}
-body::before {
-  content: ''; position: fixed; inset: 0;
-  background-image: radial-gradient(circle, #ffffff06 1px, transparent 1px);
-  background-size: 28px 28px; pointer-events: none; z-index: 0;
-}
+body { font-family: 'Noto Sans JP','Nunito',sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+body::before { content: ''; position: fixed; inset: 0; background-image: radial-gradient(circle, #ffffff06 1px, transparent 1px); background-size: 28px 28px; pointer-events: none; z-index: 0; }
 .blob { position: fixed; border-radius: 50%; filter: blur(90px); pointer-events: none; z-index: 0; }
 .blob.a { width: 500px; height: 500px; background: #9b5de515; top: -150px; left: -150px; }
 .blob.b { width: 400px; height: 400px; background: #3a86ff12; bottom: -100px; right: -100px; }
 
 /* ── ヘッダー ── */
-.site-header {
-  position: sticky; top: 0; z-index: 100;
-  background: #0c0c18cc; backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 24px; height: 56px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.site-logo {
-  font-family: 'Nunito',sans-serif; font-weight: 900; font-size: 1.3rem;
-  background: linear-gradient(135deg, var(--orange), var(--yellow));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.signin-btn {
-  background: linear-gradient(135deg, var(--orange), var(--yellow));
-  color: #fff; border: none; border-radius: 20px; padding: 8px 20px;
-  font-family: 'Nunito',sans-serif; font-weight: 900; font-size: .85rem;
-  cursor: pointer; transition: all .2s;
-}
+.site-header { position: sticky; top: 0; z-index: 100; background: #0c0c18cc; backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+.site-logo { font-family: 'Nunito',sans-serif; font-weight: 900; font-size: 1.3rem; background: linear-gradient(135deg, var(--orange), var(--yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.signin-btn { background: linear-gradient(135deg, var(--orange), var(--yellow)); color: #fff; border: none; border-radius: 20px; padding: 8px 20px; font-family: 'Nunito',sans-serif; font-weight: 900; font-size: .85rem; cursor: pointer; transition: all .2s; }
 .signin-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px #ff6b3540; }
-.user-chip {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 20px; padding: 6px 14px; font-size: .85rem;
-}
+.user-chip { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: .85rem; }
 .user-chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: blink 2s infinite; }
 .signout-btn { background: transparent; border: none; color: var(--muted); font-size: .75rem; cursor: pointer; font-family: inherit; margin-left: 4px; }
 .signout-btn:hover { color: var(--red); }
@@ -59,17 +32,29 @@ body::before {
 /* ── モーダル ── */
 .modal-bg { position: fixed; inset: 0; background: #000000aa; z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
 .modal-bg.open { display: flex; }
-.modal { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 32px; width: 100%; max-width: 440px; position: relative; animation: up .3s ease both; }
+.modal { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 32px; width: 100%; max-width: 440px; position: relative; animation: up .3s ease both; max-height: 90vh; overflow-y: auto; }
 .modal-close { position: absolute; top: 16px; right: 16px; background: transparent; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; }
 .modal-close:hover { color: var(--text); }
-
-/* ── Steps ── */
 .steps { display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
 .sdot { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: .78rem; font-family: 'Nunito',sans-serif; border: 2px solid var(--border); background: var(--card); color: var(--muted); transition: all .3s; }
 .sdot.active { background: linear-gradient(135deg, var(--orange), var(--yellow)); border-color: transparent; color: #fff; box-shadow: 0 0 14px #ff6b3555; }
 .sdot.done { background: var(--green); border-color: transparent; color: #fff; }
 .sline { height: 2px; width: 40px; background: var(--border); transition: background .3s; }
 .sline.active { background: linear-gradient(to right, var(--orange), var(--yellow)); }
+.code-box { background: #070710; border: 2px dashed var(--yellow); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 16px; }
+.code-val { font-family: 'Nunito',monospace; font-weight: 900; font-size: 2.4rem; letter-spacing: 8px; background: linear-gradient(135deg, var(--yellow), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: pulse 2s infinite; }
+.copy-btn { background: #ffffff10; border: 1px solid var(--border); color: var(--text); border-radius: 7px; padding: 4px 12px; font-size: .75rem; font-family: 'Nunito',sans-serif; font-weight: 700; cursor: pointer; margin-top: 8px; }
+.copy-btn:hover { background: #ffffff20; }
+.inst-list { background: #0a0a16; border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+.inst-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+.inst-row:last-child { margin-bottom: 0; }
+.inst-n { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg, var(--purple), var(--blue)); display: flex; align-items: center; justify-content: center; font-size: .68rem; font-weight: 900; font-family: 'Nunito',sans-serif; }
+.inst-t { font-size: .84rem; color: #cccce0; line-height: 1.6; }
+.inst-t a { color: var(--teal); font-weight: 700; }
+.timer { text-align: center; font-size: .78rem; color: var(--muted); margin-top: 8px; }
+.timer span { color: var(--yellow); font-weight: 700; }
+.success-icon { text-align: center; font-size: 3rem; margin-bottom: 12px; animation: bounce .6s cubic-bezier(.36,.07,.19,.97) both; }
+.success-title { font-family: 'Nunito',sans-serif; font-weight: 900; font-size: 1.4rem; text-align: center; background: linear-gradient(135deg, var(--green), var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 6px; }
 
 /* ── フォーム ── */
 .field { margin-bottom: 14px; }
@@ -86,58 +71,41 @@ body::before {
 .alert-error { background: #ef476f15; border: 1px solid #ef476f44; color: #ef476f; }
 .alert-success { background: #06d6a015; border: 1px solid #06d6a044; color: #06d6a0; }
 
-/* ── コードボックス ── */
-.code-box { background: #070710; border: 2px dashed var(--yellow); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 16px; }
-.code-val { font-family: 'Nunito',monospace; font-weight: 900; font-size: 2.4rem; letter-spacing: 8px; background: linear-gradient(135deg, var(--yellow), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: pulse 2s infinite; }
-.copy-btn { background: #ffffff10; border: 1px solid var(--border); color: var(--text); border-radius: 7px; padding: 4px 12px; font-size: .75rem; font-family: 'Nunito',sans-serif; font-weight: 700; cursor: pointer; transition: all .2s; margin-top: 8px; }
-.copy-btn:hover { background: #ffffff20; }
-.inst-list { background: #0a0a16; border-radius: 10px; padding: 14px; margin-bottom: 14px; }
-.inst-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
-.inst-row:last-child { margin-bottom: 0; }
-.inst-n { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg, var(--purple), var(--blue)); display: flex; align-items: center; justify-content: center; font-size: .68rem; font-weight: 900; font-family: 'Nunito',sans-serif; }
-.inst-t { font-size: .84rem; color: #cccce0; line-height: 1.6; }
-.inst-t a { color: var(--teal); font-weight: 700; }
-.timer { text-align: center; font-size: .78rem; color: var(--muted); margin-top: 8px; }
-.timer span { color: var(--yellow); font-weight: 700; }
-.success-icon { text-align: center; font-size: 3rem; margin-bottom: 12px; animation: bounce .6s cubic-bezier(.36,.07,.19,.97) both; }
-.success-title { font-family: 'Nunito',sans-serif; font-weight: 900; font-size: 1.4rem; text-align: center; background: linear-gradient(135deg, var(--green), var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 6px; }
-
 /* ── メイン ── */
 .wrap { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 24px; }
 
-.status-bar {
-  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
-  padding: 14px 20px; margin-bottom: 20px;
-  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
-  animation: up .5s ease .1s both;
+/* ── マイプロジェクト ── */
+.my-projects-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 20px 24px; margin-bottom: 20px; animation: up .4s ease both;
 }
+.my-projects-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.my-projects-title { font-family: 'Nunito',sans-serif; font-weight: 900; font-size: 1rem; }
+.add-proj-btn { background: linear-gradient(135deg, var(--orange), var(--yellow)); color: #fff; border: none; border-radius: 8px; padding: 6px 14px; font-family: 'Nunito',sans-serif; font-weight: 900; font-size: .78rem; cursor: pointer; transition: all .2s; }
+.add-proj-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px #ff6b3540; }
+
+.add-proj-form { background: #0a0a16; border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 14px; animation: up .3s ease both; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.proj-list { display: flex; flex-direction: column; gap: 8px; }
+.proj-item { background: #0a0a16; border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; }
+.proj-item-info { flex: 1; }
+.proj-item-id { font-family: 'Nunito',sans-serif; font-weight: 900; font-size: .88rem; }
+.proj-item-var { font-size: .72rem; color: var(--teal); margin-top: 2px; }
+.proj-item-del { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 7px; padding: 4px 10px; font-size: .72rem; cursor: pointer; transition: all .2s; flex-shrink: 0; }
+.proj-item-del:hover { border-color: var(--red); color: var(--red); }
+
+/* ── プレイヤー一覧 ── */
+.status-bar { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; animation: up .5s ease .1s both; }
 .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: inline-block; margin-right: 8px; animation: blink 2s infinite; }
 .status-text { font-size: .82rem; color: var(--muted); }
 .status-text span { color: var(--green); font-weight: 700; }
-.refresh-btn {
-  background: transparent; border: 1px solid var(--border); color: var(--muted);
-  border-radius: 8px; padding: 6px 14px; font-size: .78rem; font-family: inherit;
-  cursor: pointer; transition: all .2s;
-}
+.refresh-btn { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; padding: 6px 14px; font-size: .78rem; font-family: inherit; cursor: pointer; transition: all .2s; }
 .refresh-btn:hover { border-color: var(--teal); color: var(--teal); }
-
-.section-title {
-  font-family: 'Nunito',sans-serif; font-weight: 900; font-size: 1.1rem;
-  margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
-  animation: up .5s ease .15s both;
-}
-.count-badge {
-  background: linear-gradient(135deg, var(--orange), var(--yellow));
-  color: #fff; font-size: .72rem; padding: 2px 10px; border-radius: 20px;
-  font-family: 'Nunito',sans-serif; font-weight: 900;
-}
-
+.section-title { font-family: 'Nunito',sans-serif; font-weight: 900; font-size: 1.1rem; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; animation: up .5s ease .15s both; }
+.count-badge { background: linear-gradient(135deg, var(--orange), var(--yellow)); color: #fff; font-size: .72rem; padding: 2px 10px; border-radius: 20px; font-family: 'Nunito',sans-serif; font-weight: 900; }
 .player-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
-.player-card {
-  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-  padding: 20px; position: relative; overflow: hidden;
-  animation: up .4s ease both; transition: border-color .2s, transform .2s;
-}
+.player-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; position: relative; overflow: hidden; animation: up .4s ease both; transition: border-color .2s, transform .2s; }
 .player-card:hover { border-color: #3a3a60; transform: translateY(-2px); }
 .player-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--blue), var(--purple)); }
 .player-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
@@ -147,7 +115,6 @@ body::before {
 .data-box { background: #0a0a16; border: 1px dashed var(--border); border-radius: 9px; padding: 10px 12px; font-family: monospace; font-size: .75rem; color: #8888bb; word-break: break-all; line-height: 1.5; max-height: 60px; overflow: hidden; position: relative; }
 .data-box::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 20px; background: linear-gradient(transparent, #0a0a16); }
 .save-time { font-size: .72rem; color: var(--muted); margin-top: 10px; text-align: right; }
-
 .last-action { background: #06d6a010; border: 1px solid #06d6a030; border-radius: 10px; padding: 10px 16px; font-size: .8rem; color: var(--green); margin-bottom: 16px; animation: up .3s ease both; display: none; }
 .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); animation: up .5s ease both; }
 .empty-icon { font-size: 3rem; margin-bottom: 14px; }
@@ -165,7 +132,6 @@ body::before {
 </style>
 </head>
 <body>
-
 <div class="blob a"></div>
 <div class="blob b"></div>
 
@@ -173,9 +139,7 @@ body::before {
 <header class="site-header">
   <div class="site-logo">🐱 ScratchSave</div>
   <div>
-    <div id="headerGuest">
-      <button class="signin-btn" onclick="openAuthModal()">サインイン</button>
-    </div>
+    <div id="headerGuest"><button class="signin-btn" onclick="openAuthModal()">サインイン</button></div>
     <div id="headerUser" style="display:none">
       <div class="user-chip">
         <span class="user-chip-dot"></span>
@@ -197,20 +161,13 @@ body::before {
       <div class="sline" id="sline2"></div>
       <div class="sdot" id="sdot3">3</div>
     </div>
-
-    <!-- Step 1 -->
     <div class="panel active" id="apanel1">
       <div style="font-family:'Nunito',sans-serif;font-weight:900;font-size:1.1rem;margin-bottom:6px">👤 ユーザー名を入力</div>
       <div style="color:var(--muted);font-size:.82rem;margin-bottom:16px">ScratchアカウントのユーザーIDを入力してください。</div>
-      <div class="field">
-        <label>Scratchユーザー名</label>
-        <input type="text" id="authUsername" placeholder="例: griffpatch" autocomplete="off" spellcheck="false">
-      </div>
+      <div class="field"><label>Scratchユーザー名</label><input type="text" id="authUsername" placeholder="例: griffpatch" autocomplete="off" spellcheck="false"></div>
       <button class="btn btn-primary" id="authStep1Btn" onclick="authStep1()">確認コードを取得 →</button>
       <div id="authAlert1"></div>
     </div>
-
-    <!-- Step 2 -->
     <div class="panel" id="apanel2">
       <div style="font-family:'Nunito',sans-serif;font-weight:900;font-size:1.1rem;margin-bottom:6px">🔑 コードをコメント</div>
       <div style="color:var(--muted);font-size:.82rem;margin-bottom:14px">以下のコードを連携プロジェクトにコメントしてください。</div>
@@ -229,8 +186,6 @@ body::before {
       <div class="timer" id="authTimer"></div>
       <div id="authAlert2"></div>
     </div>
-
-    <!-- Step 3 -->
     <div class="panel" id="apanel3">
       <div class="success-icon">🎉</div>
       <div class="success-title" id="authSuccessTitle"></div>
@@ -243,10 +198,47 @@ body::before {
 <!-- ── メイン ── -->
 <div class="wrap">
 
+  <!-- サインイン済み：マイプロジェクト管理 -->
+  <div id="myProjectsSection" style="display:none">
+    <div class="my-projects-card">
+      <div class="my-projects-hd">
+        <div class="my-projects-title">📁 監視するプロジェクト</div>
+        <button class="add-proj-btn" onclick="toggleAddForm()">＋ 追加</button>
+      </div>
+
+      <!-- 追加フォーム -->
+      <div id="addProjForm" style="display:none">
+        <div class="add-proj-form">
+          <div class="row2">
+            <div class="field" style="margin-bottom:0">
+              <label>プロジェクトID</label>
+              <input type="text" id="newProjId" placeholder="例: 1290149475">
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label>クラウド変数名</label>
+              <input type="text" id="newVarName" placeholder="例: SAVE_DATA">
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="btn btn-primary" style="padding:10px" onclick="addProject()">追加</button>
+            <button class="btn btn-ghost" style="margin-top:0;padding:10px" onclick="toggleAddForm()">キャンセル</button>
+          </div>
+          <div id="addProjAlert"></div>
+        </div>
+      </div>
+
+      <!-- プロジェクト一覧 -->
+      <div id="myProjList" class="proj-list">
+        <div style="color:var(--muted);font-size:.82rem;padding:4px 0">読み込み中...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 全プレイヤー一覧 -->
   <div class="status-bar">
     <div>
       <span class="status-dot"></span>
-      <span class="status-text">自動監視中 — Scratchの保存・読み込みを自動検出 | 最終確認: <span id="lastCheck">--</span></span>
+      <span class="status-text">自動監視中 — Scratchの変数を自動検出 | 最終確認: <span id="lastCheck">--</span></span>
     </div>
     <button class="refresh-btn" onclick="loadData()">🔄 今すぐ更新</button>
   </div>
@@ -294,6 +286,12 @@ window.onload = () => {
 function toggleConfig() {
   const b = document.getElementById('cfgBox');
   b.style.display = b.style.display === 'none' ? 'block' : 'none';
+}
+
+function toggleAddForm() {
+  const f = document.getElementById('addProjForm');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+  if (f.style.display === 'block') document.getElementById('newProjId').focus();
 }
 
 // ── 認証 ──────────────────────────────────────────────────
@@ -376,12 +374,15 @@ function showUserHeader(username) {
   document.getElementById('headerGuest').style.display = 'none';
   document.getElementById('headerUser').style.display = 'block';
   document.getElementById('headerUsername').textContent = `@${username}`;
+  document.getElementById('myProjectsSection').style.display = 'block';
+  loadMyProjects();
 }
 
 function signOut() {
   currentUser = ''; localStorage.removeItem('currentUser');
   document.getElementById('headerGuest').style.display = 'block';
   document.getElementById('headerUser').style.display = 'none';
+  document.getElementById('myProjectsSection').style.display = 'none';
 }
 
 function copyAuthCode() {
@@ -391,6 +392,69 @@ function copyAuthCode() {
   });
 }
 function authGoBack() { clearInterval(authTimer); clearAlert('authAlert1'); setAuthStep(1); }
+
+// ── マイプロジェクト管理 ──────────────────────────────────
+async function loadMyProjects() {
+  try {
+    const data = await workerFetch('/projects');
+    const myProjs = (data.projects || []).filter(p => p.username === currentUser);
+    renderMyProjects(myProjs);
+  } catch(e) {
+    document.getElementById('myProjList').innerHTML = `<div style="color:var(--red);font-size:.82rem">取得失敗: ${escHtml(e.message)}</div>`;
+  }
+}
+
+function renderMyProjects(projs) {
+  const list = document.getElementById('myProjList');
+  if(projs.length === 0) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:.82rem;padding:4px 0">まだ登録されていません。「＋ 追加」でプロジェクトを追加してください。</div>';
+    return;
+  }
+  list.innerHTML = projs.map(p => `
+    <div class="proj-item">
+      <div class="proj-item-info">
+        <div class="proj-item-id">🎮 ${escHtml(p.projectId)}</div>
+        <div class="proj-item-var">☁ ${escHtml(p.varName)}</div>
+      </div>
+      <button class="proj-item-del" onclick="removeProject('${escHtml(p.projectId)}','${escHtml(p.varName)}')">削除</button>
+    </div>`).join('');
+}
+
+async function addProject() {
+  const projectId = document.getElementById('newProjId').value.trim();
+  const varName = document.getElementById('newVarName').value.trim() || 'SAVE_DATA';
+  if(!projectId){showAlert('addProjAlert','⚠ プロジェクトIDを入力してください');return;}
+  clearAlert('addProjAlert');
+  try {
+    const res = await workerFetch('/projects', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ projectId, varName, username: currentUser })
+    });
+    if(res.ok) {
+      document.getElementById('newProjId').value = '';
+      document.getElementById('newVarName').value = '';
+      document.getElementById('addProjForm').style.display = 'none';
+      loadMyProjects();
+    } else {
+      showAlert('addProjAlert', `❌ ${res.error}`);
+    }
+  } catch(e) {
+    showAlert('addProjAlert', `❌ ${e.message}`);
+  }
+}
+
+async function removeProject(projectId, varName) {
+  if(!confirm(`プロジェクト ${projectId} の監視を解除しますか？`)) return;
+  try {
+    await workerFetch('/projects', {
+      method: 'DELETE',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ projectId, varName, username: currentUser })
+    });
+    loadMyProjects();
+  } catch(e) {}
+}
 
 // ── プレイヤー一覧 ────────────────────────────────────────
 async function loadData() {
@@ -402,7 +466,7 @@ async function loadData() {
     const badge = document.getElementById('countBadge');
     if(!data.ok||!data.players) throw new Error(data.error||'取得失敗');
     badge.textContent = data.players.length;
-    if(data.players.length===0) {
+    if(data.players.length === 0) {
       grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">💾</div><div class="empty-text">まだセーブデータがありません。<br>Scratchプロジェクトで保存操作をするとここに表示されます。</div></div>`;
       return;
     }
@@ -412,7 +476,7 @@ async function loadData() {
           <div class="player-avatar">🎮</div>
           <div>
             <div class="player-name">@${escHtml(p.username)}</div>
-            <div class="player-sub">プロジェクト: ${escHtml(String(p.projectId))}</div>
+            <div class="player-sub">ID: ${escHtml(String(p.projectId))} | ☁ ${escHtml(p.varName||'')}</div>
           </div>
         </div>
         <div class="data-box">${escHtml(p.dataPreview)}${p.dataPreview.length>=80?'…':''}</div>
@@ -426,7 +490,7 @@ async function loadData() {
       el.style.display = 'block';
     }
   } catch(e) {
-    document.getElementById('playerGrid').innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">⚠️</div><div class="empty-text">データの取得に失敗しました。<br><small style="color:#ef476f">${escHtml(e.message)}</small><br><br>Worker URLを確認してください。</div></div>`;
+    document.getElementById('playerGrid').innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">⚠️</div><div class="empty-text">データの取得に失敗しました。<br><small style="color:#ef476f">${escHtml(e.message)}</small></div></div>`;
   }
 }
 
