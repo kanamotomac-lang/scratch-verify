@@ -55,10 +55,10 @@
   .drop-text strong{color:var(--accent);font-weight:400;}
   #fileInput{display:none;}
 
-  .controls{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:20px;margin-bottom:20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;align-items:end;}
+  .controls{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:20px;margin-bottom:24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;align-items:end;}
   @media(max-width:720px){.controls{grid-template-columns:1fr 1fr;}}
   @media(max-width:480px){.controls{grid-template-columns:1fr;}}
-  .controls-row2{background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 2px 2px;padding:16px 20px 20px;margin-top:-20px;margin-bottom:20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;align-items:end;}
+  .controls-row2{background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 2px 2px;padding:16px 20px 20px;margin-top:-24px;margin-bottom:20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;align-items:end;}
   @media(max-width:720px){.controls-row2{grid-template-columns:1fr 1fr;}}
   @media(max-width:480px){.controls-row2{grid-template-columns:1fr;}}
   .controls-row3{background:var(--surface);border:1px solid var(--border);border-top:none;padding:16px 20px 20px;margin-top:-20px;margin-bottom:20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;align-items:start;}
@@ -130,8 +130,6 @@
     <div class="subtitle">HSV再現_完成版</div>
   </header>
 
-  <!-- Format -->
-
   <!-- Sprite color -->
   <div class="sprite-row">
     <span class="sprite-label">スプライト色（赤コスチューム）：</span>
@@ -166,12 +164,12 @@
       <select id="resolution">
         <option value="32">32×32（最軽量）</option>
         <option value="64">64×64（軽量）</option>
-        <option value="128" selected>128×128（標準）</option>
-        <option value="256">256×256（高精細）</option>
+        <option value="128">128×128（標準）</option>
+        <option value="256" selected>256×256（高精細）</option>
         <option value="512">512×512（超高精細）</option>
         <option value="custom">カスタム…</option>
       </select>
-      <div id="customResWrap" style="display:none;margin-top:8px;display:none;">
+      <div id="customResWrap" style="display:none;">
         <div class="thresh-input-row">
           <input type="number" id="customResVal" min="8" max="1024" step="8" value="192" placeholder="8–1024">
           <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)">px（2の倍数推奨）</span>
@@ -179,8 +177,8 @@
       </div>
     </div>
     <div class="ctrl-group">
-      <label>最大分割深度 — <span id="depthLabel">8</span> レベル</label>
-      <input type="range" id="maxDepth" min="1" max="9" step="1" value="8">
+      <label>最大分割深度 — <span id="depthLabel">∞ (無制限)</span> レベル</label>
+      <input type="range" id="maxDepth" min="1" max="9" step="1" value="9">
       <div class="ctrl-value">浅←速い / 深→精細</div>
     </div>
     <div>
@@ -190,14 +188,12 @@
     </div>
   </div>
 
-  <!-- Controls Row 2 →（旧 threshold セクション削除）-->
-
   <div class="controls-row2">
     <div class="ctrl-group">
       <label>色精度</label>
       <select id="colorPrecision">
-        <option value="1">精密（H±1°, S/V±1）</option>
-        <option value="2" selected>標準（H±3°, S/V±1）</option>
+        <option value="1" selected>精密（H±1°, S/V±1）</option>
+        <option value="2">標準（H±3°, S/V±1）</option>
         <option value="5">粗め（H±10°, S/V±5）</option>
         <option value="10">最粗（H±20°, S/V±10）</option>
       </select>
@@ -240,8 +236,8 @@
     <div class="ctrl-group">
       <label>最小ブロックサイズ</label>
       <select id="minBlock">
-        <option value="1">1 px（最精細）</option>
-        <option value="2" selected>2 px</option>
+        <option value="1" selected>1 px（最精細）</option>
+        <option value="2">2 px</option>
         <option value="4">4 px</option>
         <option value="8">8 px（大まか）</option>
         <option value="16">16 px</option>
@@ -249,50 +245,50 @@
       <div class="ctrl-value" style="font-size:10px;color:var(--muted);margin-top:6px;">これ以下は強制的に葉ノード</div>
     </div>
 
-    <div class="ctrl-group" id="rgbWeightGroup" style="">
+    <div class="ctrl-group" id="rgbWeightGroup">
       <label>輝度重み（R / G / B）</label>
       <div class="hsv-weight-row">
         <div class="weight-item h-w">
-          <label>R <span class="wlabel" id="wRLabel">0.30</span></label>
-          <input type="range" id="wR" min="0" max="1" step="0.05" value="0.299" style="margin-top:4px;">
+          <label>R <span class="wlabel" id="wRLabel">0.80</span></label>
+          <input type="range" id="wR" min="0" max="1" step="0.05" value="0.8" style="margin-top:4px;">
         </div>
         <div class="weight-item s-w">
-          <label>G <span class="wlabel" id="wGLabel">0.59</span></label>
-          <input type="range" id="wG" min="0" max="1" step="0.05" value="0.587" style="margin-top:4px;">
+          <label>G <span class="wlabel" id="wGLabel">0.80</span></label>
+          <input type="range" id="wG" min="0" max="1" step="0.05" value="0.8" style="margin-top:4px;">
         </div>
         <div class="weight-item v-w">
-          <label>B <span class="wlabel" id="wBLabel">0.11</span></label>
-          <input type="range" id="wB" min="0" max="1" step="0.05" value="0.114" style="margin-top:4px;">
+          <label>B <span class="wlabel" id="wBLabel">0.80</span></label>
+          <input type="range" id="wB" min="0" max="1" step="0.05" value="0.8" style="margin-top:4px;">
         </div>
       </div>
     </div>
 
-    <!-- HSV per-channel thresholds (shown only for hsv mode) -->
+    <!-- HSV per-channel thresholds -->
     <div class="ctrl-group dim-group" id="hsvThreshGroup">
       <label>HSV チャンネル別閾値</label>
       <div style="display:grid;gap:8px;margin-top:4px;">
         <div>
           <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:#aaaaff;margin-bottom:3px;">
-            <span>色相(H) 閾値</span><span id="hThreshLabel">200</span>
+            <span>色相(H) 閾値</span><span id="hThreshLabel">20</span>
           </div>
           <div class="thresh-input-row">
-            <input type="range" id="hThresh" min="0" max="2000" step="10" value="200" style="margin-top:0;flex:1;">
-            <input type="number" id="hThreshNum" min="0" max="2000" step="10" value="200">
+            <input type="range" id="hThresh" min="0" max="2000" step="10" value="20" style="margin-top:0;flex:1;">
+            <input type="number" id="hThreshNum" min="0" max="2000" step="10" value="20">
           </div>
         </div>
         <div>
           <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:#ffcc44;margin-bottom:3px;">
-            <span>彩度(S) 閾値</span><span id="sThreshLabel">300</span>
+            <span>彩度(S) 閾値</span><span id="sThreshLabel">20</span>
           </div>
           <div class="thresh-input-row">
-            <input type="range" id="sThresh" min="0" max="2000" step="10" value="300" style="margin-top:0;flex:1;">
-            <input type="number" id="sThreshNum" min="0" max="2000" step="10" value="300">
+            <input type="range" id="sThresh" min="0" max="2000" step="10" value="20" style="margin-top:0;flex:1;">
+            <input type="number" id="sThreshNum" min="0" max="2000" step="10" value="20">
           </div>
         </div>
       </div>
     </div>
 
-    <!-- All-channel thresholds (shown for all mode) -->
+    <!-- All-channel thresholds -->
     <div class="ctrl-group dim-group" id="allThreshGroup">
       <label>チャンネル別分散閾値（R/G/B）</label>
       <div style="display:grid;gap:8px;margin-top:4px;">
@@ -394,7 +390,6 @@ const convertBtn=document.getElementById('convertBtn'),saveBtn=document.getEleme
 const outputArea=document.getElementById('outputArea');
 const resolution=document.getElementById('resolution');
 const progress=document.getElementById('progress');
-// ── 分割判定方式 ──────────────────────────────────────────
 const metricDescs={
   luma:      '輝度のみで分散を計算',
   rgb_range: 'R/G/Bそれぞれの最大差分で判定',
@@ -403,21 +398,53 @@ const metricDescs={
 };
 function onMetricChange(val){
   document.getElementById('metricDesc').textContent=metricDescs[val]||'';
-  document.getElementById('hsvThreshGroup').classList.toggle('active', val==='hsv');
-  document.getElementById('allThreshGroup').classList.toggle('active', val==='all');
+  document.getElementById('hsvThreshGroup').classList.toggle('active', val==='hsv'||val==='luma');
+  document.getElementById('allThreshGroup').classList.toggle('active', val==='all'||val==='rgb_range');
   document.getElementById('rgbWeightGroup').style.opacity=(val==='luma'||val==='all')?'1':'0.4';
+
+  // H閾値スライダーのスケールをモードに合わせて変更
+  // luma: 輝度分散 0-16000 / hsv: 色相分散 0-2000
+  const hsl=document.getElementById('hThresh');
+  const hnm=document.getElementById('hThreshNum');
+  const hlb=document.getElementById('hThreshLabel');
+  const hsvLabel=document.querySelector('#hsvThreshGroup label');
+  if(val==='luma'){
+    hsl.max=16000; hsl.step=100; hsl.value=800;
+    hnm.max=16000; hnm.step=100; hnm.value=800;
+    hlb.textContent=800;
+    // S閾値を非表示（luma では使わない）
+    document.getElementById('sThresh').closest('div').parentElement.style.display='none';
+    if(hsvLabel) hsvLabel.textContent='輝度分散 閾値';
+  } else {
+    hsl.max=2000; hsl.step=10; hsl.value=20;
+    hnm.max=2000; hnm.step=10; hnm.value=20;
+    hlb.textContent=20;
+    document.getElementById('sThresh').closest('div').parentElement.style.display='';
+    if(hsvLabel) hsvLabel.textContent='HSV チャンネル別閾値';
+  }
+
+  // rgb_range: 差分は0-255スケール / all: 分散は0-5000スケール
+  const isRange = val==='rgb_range';
+  const maxVal = isRange ? 255 : 5000;
+  const defVal = isRange ? 30  : 800;
+  ['rThresh','gThresh','bThresh'].forEach(id=>{
+    const sl=document.getElementById(id);
+    const lb=document.getElementById(id.replace('Thresh','ThreshLabel'));
+    const numInputs=sl.parentElement.querySelectorAll('input[type=number]');
+    sl.max=maxVal; sl.value=defVal;
+    if(lb) lb.textContent=defVal;
+    numInputs.forEach(n=>{ n.max=maxVal; n.value=defVal; });
+  });
 }
 document.getElementById('splitMetric').addEventListener('change',function(){ onMetricChange(this.value); });
 onMetricChange('luma');
 
-// ── 輝度重みスライダー ──────────────────────────────────────
 ['wR','wG','wB'].forEach(id=>{
   const sl=document.getElementById(id);
   const lb=document.getElementById(id+'Label');
   sl.addEventListener('input',()=>{ lb.textContent=parseFloat(sl.value).toFixed(2); });
 });
 
-// ── HSVチャンネル閾値スライダー ────────────────────────────
 function bindSimple(sliderId, labelId){
   const sl=document.getElementById(sliderId), lb=document.getElementById(labelId);
   sl.addEventListener('input',()=>lb.textContent=sl.value);
@@ -434,7 +461,6 @@ bindSimple('sThresh','sThreshLabel');
   sl.addEventListener('input',()=>lb.textContent=sl.value);
 });
 
-// Presets (updated for new system)
 function applyPreset(p){
   if(!p) return;
   const m=document.getElementById('splitMetric');
@@ -449,13 +475,10 @@ function applyPreset(p){
   document.getElementById('threshPreset').value='';
 }
 
-
-// Max depth label
 document.getElementById('maxDepth').addEventListener('input',function(){
   document.getElementById('depthLabel').textContent=this.value==='9'?'∞ (無制限)':this.value;
 });
 
-// Custom resolution toggle
 resolution.addEventListener('change',function(){
   const wrap=document.getElementById('customResWrap');
   if(this.value==='custom'){ wrap.style.display='block'; }
@@ -494,13 +517,12 @@ function showOriginal(img){
   const c=document.createElement('canvas'); c.width=c.height=400;
   const ctx=c.getContext('2d');
   ctx.fillStyle='#888'; ctx.fillRect(0,0,400,400);
-  // crop source to 4:3, then letterbox into square
   const srcRatio=img.width/img.height;
   let sx,sy,sw,sh;
   if(srcRatio>4/3){ sw=img.height*4/3; sh=img.height; sx=(img.width-sw)/2; sy=0; }
   else            { sh=img.width*3/4;  sw=img.width;  sy=(img.height-sh)/2; sx=0; }
-  const dh=Math.round(400*3/4); // 300px
-  const dy=Math.round((400-dh)/2); // 50px top bar
+  const dh=Math.round(400*3/4);
+  const dy=Math.round((400-dh)/2);
   ctx.drawImage(img,sx,sy,sw,sh,0,dy,400,dh);
   c.style.cssText='width:100%;height:100%;object-fit:contain;'; wrap.appendChild(c);
 }
@@ -514,7 +536,6 @@ convertBtn.addEventListener('click',async()=>{
     let N;
     if(resolution.value==='custom'){
       N=Math.max(8,Math.min(1024,parseInt(document.getElementById('customResVal').value)||128));
-      // 2の倍数に丸める
       N=Math.pow(2,Math.round(Math.log2(N)));
       N=Math.max(8,Math.min(1024,N));
     } else {
@@ -530,7 +551,6 @@ convertBtn.addEventListener('click',async()=>{
     const rThr=parseInt(document.getElementById('rThresh').value);
     const gThr=parseInt(document.getElementById('gThresh').value);
     const bThr=parseInt(document.getElementById('bThresh').value);
-    // legacy luma threshold — use hThresh as main threshold for luma/rgb_range modes
     const mainThresh=parseInt(document.getElementById('hThresh').value)||800;
     const thresh={metric,minBlock,wR,wG,wB,hThr,sThr,rThr,gThr,bThr,mainThresh};
     const maxD=parseInt(document.getElementById('maxDepth').value);
@@ -540,14 +560,13 @@ convertBtn.addEventListener('click',async()=>{
 
     const oc=document.createElement('canvas'); oc.width=oc.height=N;
     const ctx=oc.getContext('2d');
-    // letterbox into N×N square: 4:3 image centred vertically, gray bars top/bottom
     const img=loadedImage;
     const srcRatio=img.width/img.height;
     let sx,sy,sw,sh;
     if(srcRatio>4/3){ sw=img.height*4/3; sh=img.height; sx=(img.width-sw)/2; sy=0; }
     else            { sh=img.width*3/4;  sw=img.width;  sy=(img.height-sh)/2; sx=0; }
-    const dh=Math.round(N*3/4); // height of image within square
-    const dy=Math.round((N-dh)/2); // top offset (gray bar)
+    const dh=Math.round(N*3/4);
+    const dy=Math.round((N-dh)/2);
     ctx.fillStyle='#888'; ctx.fillRect(0,0,N,N);
     ctx.drawImage(img,sx,sy,sw,sh,0,dy,N,dh);
     const pix=ctx.getImageData(0,0,N,N).data;
@@ -569,35 +588,16 @@ convertBtn.addEventListener('click',async()=>{
   progress.style.display='none'; convertBtn.disabled=false;
 });
 
-// ══════════════════════════════════════════════════════════════
-// RGB → 9文字 HHH SSS VVV
-//
-// HSV完成版の変数:
-//   色      (0-100): Hue  0-360° を 0-99 に圧縮
-//   鮮やかさ (0-100): Saturation
-//   明るさ   (0-100): Value
-//
-// RGB → HSV 逆算:
-//   V = max(r,g,b)
-//   S = (max-min)/max  ← これが鮮やかさ
-//   H = hue in degrees, 相対スプライト色から
-//
-// グレー(S=0)も正確に表現可能
-// ══════════════════════════════════════════════════════════════
 function pixelToLeaf(r,g,b,colorPrec,svRoundMode){
-  colorPrec=colorPrec||2; svRoundMode=svRoundMode||'round';
+  colorPrec=colorPrec||1; svRoundMode=svRoundMode||'round';
   const rn=r/255, gn=g/255, bn=b/255;
   const mx=Math.max(rn,gn,bn), mn=Math.min(rn,gn,bn), d=mx-mn;
 
   const roundFn = svRoundMode==='floor'?Math.floor : svRoundMode==='ceil'?Math.ceil : Math.round;
 
-  // V = 明るさ (0-100)
   const V=Math.min(100,Math.max(0,roundFn(mx*100/colorPrec)*colorPrec));
-
-  // S = 鮮やかさ (0-100)
   const S=Math.min(100,Math.max(0,roundFn((mx>0 ? d/mx : 0)*100/colorPrec)*colorPrec));
 
-  // H = 色 (0-99, relative to sprite hue)
   let pixH=0;
   if(d>0.001){
     if(mx===rn)      pixH=((gn-bn)/d%6+6)%6*60;
@@ -605,8 +605,7 @@ function pixelToLeaf(r,g,b,colorPrec,svRoundMode){
     else             pixH=((rn-gn)/d+4)*60;
   }
   const deltaH=(pixH-spriteHue+360)%360;
-  // colorPrec での色相丸め（HHH は 0-99 スケール）
-  const hStep=colorPrec/100*360; // 色相ステップ（度）
+  const hStep=colorPrec/100*360;
   const deltaHR=Math.round(deltaH/hStep)*hStep;
   const H=Math.round(((deltaHR%360)+360)%360/360*100)%100;
 
@@ -615,109 +614,6 @@ function pixelToLeaf(r,g,b,colorPrec,svRoundMode){
        + String(V).padStart(3,'0');
 }
 
-// Quadtree (pre-order: n, NE, SE, NW, SW)
-// thresh = {luma, hue, sat, val}  (Infinity = disabled)
-function buildQuadtree(pix,stride,x,y,size,thresh,result,depth,maxDepth,colorPrec,svRoundMode){
-  if(size<=1 || depth>=maxDepth){
-    const i=(y*stride+x)*4;
-    result.push(pixelToLeaf(pix[i],pix[i+1],pix[i+2],colorPrec,svRoundMode));
-    return;
-  }
-  const cnt=size*size;
-  // Collect per-pixel luma and HSV
-  let sumL=0,sumL2=0,sumH=0,sumH2=0,sumS=0,sumS2=0,sumV=0,sumV2=0;
-  for(let dy=0;dy<size;dy++) for(let dx=0;dx<size;dx++){
-    const i=((y+dy)*stride+(x+dx))*4;
-    const r=pix[i]/255, g=pix[i+1]/255, b=pix[i+2]/255;
-    // Luma (0-255 raw for backward compat)
-    const luma=0.299*pix[i]+0.587*pix[i+1]+0.114*pix[i+2];
-    sumL+=luma; sumL2+=luma*luma;
-    // HSV (scaled: H=0-360, S/V=0-100)
-    const mx=Math.max(r,g,b), mn=Math.min(r,g,b), d=mx-mn;
-    const V=mx*100, S=(mx>0?d/mx:0)*100;
-    let H=0;
-    if(d>0.001){
-      if(mx===r)      H=((g-b)/d%6+6)%6*60;
-      else if(mx===g) H=((b-r)/d+2)*60;
-      else            H=((r-g)/d+4)*60;
-    }
-    sumH+=H; sumH2+=H*H;
-    sumS+=S; sumS2+=S*S;
-    sumV+=V; sumV2+=V*V;
-  }
-  const varL=sumL2/cnt-(sumL/cnt)**2;
-  const varH=sumH2/cnt-(sumH/cnt)**2;
-  const varS=sumS2/cnt-(sumS/cnt)**2;
-  const varV=sumV2/cnt-(sumV/cnt)**2;
-
-  // Merge only if ALL active channels pass
-  if(varL<=thresh.luma && varH<=thresh.hue && varS<=thresh.sat && varV<=thresh.val){
-    const cx=x+(size>>1),cy=y+(size>>1),i=(cy*stride+cx)*4;
-    result.push(pixelToLeaf(pix[i],pix[i+1],pix[i+2],colorPrec,svRoundMode));
-    return;
-  }
-  result.push('n');
-  const h=size>>1;
-  buildQuadtree(pix,stride,x+h,y,  h,thresh,result,depth+1,maxDepth,colorPrec,svRoundMode);
-  buildQuadtree(pix,stride,x+h,y+h,h,thresh,result,depth+1,maxDepth,colorPrec,svRoundMode);
-  buildQuadtree(pix,stride,x,  y,  h,thresh,result,depth+1,maxDepth,colorPrec,svRoundMode);
-  buildQuadtree(pix,stride,x,  y+h,h,thresh,result,depth+1,maxDepth,colorPrec,svRoundMode);
-}
-
-// HLS helpers
-function hue2rgb(p,q,t){ if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<.5)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p; }
-
-// HSV to RGB (for preview)
-function hsvToRgb(h,s,v){
-  // h=0-360, s=0-1, v=0-1
-  const i=Math.floor(h/60)%6;
-  const f=h/60-Math.floor(h/60);
-  const p=v*(1-s), q=v*(1-f*s), t=v*(1-(1-f)*s);
-  const [r,g,b]=[[v,t,p],[q,v,p],[p,v,t],[p,q,v],[t,p,v],[v,p,q]][i];
-  return [Math.round(r*255),Math.round(g*255),Math.round(b*255)];
-}
-
-// Preview
-function renderPreview(tree,N){
-  const SIZE=400,scale=SIZE/N;
-  const c=document.createElement('canvas'); c.width=c.height=SIZE;
-  const ctx=c.getContext('2d');
-  ctx.fillStyle='#888'; ctx.fillRect(0,0,SIZE,SIZE);
-  let idx=0;
-
-  function draw(x,y,size){
-    if(idx>=tree.length) return;
-    const val=tree[idx++];
-    if(val==='n'){
-      const h=size>>1;
-      draw(x+h,y,h); draw(x+h,y+h,h);
-      draw(x,y,h);   draw(x,y+h,h);
-    } else {
-      const H=parseInt(val.slice(0,3)); // 0-99
-      const S=parseInt(val.slice(3,6)); // 0-100
-      const V=parseInt(val.slice(6,9)); // 0-100
-
-      const hue=(spriteHue + H/100*360)%360;
-      const [r,g,b]=hsvToRgb(hue, S/100, V/100);
-
-      const px=x*scale, py=y*scale, ps=size*scale;
-      ctx.fillStyle=`rgb(${r},${g},${b})`;
-      ctx.fillRect(px,py,ps,ps);
-
-      if(size>4){
-        ctx.strokeStyle='rgba(0,255,204,.04)';
-        ctx.lineWidth=0.5;
-        ctx.strokeRect(px+.25,py+.25,ps-.5,ps-.5);
-      }
-    }
-  }
-  draw(0,0,N);
-  c.style.cssText='width:100%;height:100%;object-fit:contain;';
-  const wrap=document.getElementById('qtWrap'); wrap.innerHTML=''; wrap.appendChild(c);
-}
-
-// ══ 正方形四分木（全4メトリクス対応）══════════════════════════
-// thresh = {metric, minBlock, wR,wG,wB, hThr,sThr, rThr,gThr,bThr}
 function buildQuadtreeSquare(pix,stride,x,y,size,thresh,result,depth,maxDepth,colorPrec,svRoundMode){
   if(size<=thresh.minBlock || depth>=maxDepth){
     const i=(y*stride+x)*4;
@@ -764,7 +660,7 @@ function buildQuadtreeSquare(pix,stride,x,y,size,thresh,result,depth,maxDepth,co
     }
     shouldSplit=(sumH2/cnt-(sumH/cnt)**2)>thresh.hThr||(sumS2/cnt-(sumS/cnt)**2)>thresh.sThr;
 
-  } else { // 'all'
+  } else {
     let sumR=0,sumR2=0,sumG=0,sumG2=0,sumB=0,sumB2=0;
     for(let dy=0;dy<size;dy++) for(let dx=0;dx<size;dx++){
       const i=((y+dy)*stride+(x+dx))*4;
@@ -790,7 +686,14 @@ function buildQuadtreeSquare(pix,stride,x,y,size,thresh,result,depth,maxDepth,co
   buildQuadtreeSquare(pix,stride,x,  y+h,h,thresh,result,depth+1,maxDepth,colorPrec,svRoundMode);
 }
 
-// 正方形プレビュー（N×N → 400×400）
+function hsvToRgb(h,s,v){
+  const i=Math.floor(h/60)%6;
+  const f=h/60-Math.floor(h/60);
+  const p=v*(1-s), q=v*(1-f*s), t=v*(1-(1-f)*s);
+  const [r,g,b]=[[v,t,p],[q,v,p],[p,v,t],[p,q,v],[t,p,v],[v,p,q]][i];
+  return [Math.round(r*255),Math.round(g*255),Math.round(b*255)];
+}
+
 function renderPreviewSquare(tree,N){
   const SIZE=400, scale=SIZE/N;
   const c=document.createElement('canvas'); c.width=c.height=SIZE;
@@ -824,7 +727,6 @@ function renderPreviewSquare(tree,N){
   c.style.cssText='width:100%;height:100%;object-fit:contain;';
   const wrap=document.getElementById('qtWrap'); wrap.innerHTML=''; wrap.appendChild(c);
 }
-
 
 saveBtn.addEventListener('click',()=>{
   if(!qtResult) return;
