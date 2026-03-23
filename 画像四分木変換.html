@@ -127,47 +127,10 @@
   <header>
     <div class="header-label">Scratch ツール</div>
     <h1>四分木<span>コンバーター</span></h1>
-    <div class="subtitle">HSV再現_完成版.sb3 対応 — 完全HSVカラー（グレーも正確）</div>
+    <div class="subtitle">HSV再現_完成版</div>
   </header>
 
   <!-- Format -->
-  <div class="format-box">
-    <div class="format-title">フォーマット（9文字）</div>
-    <div class="byte-row">
-      <div class="byte byte-n">n</div>
-      <div class="byte-sep">or</div>
-      <div class="byte byte-h">H</div><div class="byte byte-h">H</div><div class="byte byte-h">H</div>
-      <div class="byte byte-s">S</div><div class="byte byte-s">S</div><div class="byte byte-s">S</div>
-      <div class="byte byte-v">V</div><div class="byte byte-v">V</div><div class="byte byte-v">V</div>
-    </div>
-    <div class="fmt-desc">
-      <div class="fmt-item">
-        <strong>HHH（1–3）</strong>　<code>色</code>（000–099）<br>
-        Hue 0–360° → 0–99<br>
-        スプライト色からの相対Hue
-      </div>
-      <div class="fmt-item">
-        <strong>SSS（4–6）</strong>　<code class="y">鮮やかさ</code>（000–100）<br>
-        Saturation 0–100<br>
-        000 = グレー / 100 = 鮮やか
-      </div>
-      <div class="fmt-item">
-        <strong>VVV（7–9）</strong>　<code class="r">明るさ</code>（000–100）<br>
-        Value 0–100<br>
-        000 = 黒 / 100 = 最大輝度
-      </div>
-    </div>
-  </div>
-
-  <!-- Scratch hint -->
-  <div class="scratch-hint">
-    <div class="scratch-hint-title">Scratch 色プロシージャの書き方</div>
-    <div class="scratch-code">定義 色 [d]
-  色      ← letter(1)+letter(2)+letter(3) of d
-  鮮やかさ ← letter(4)+letter(5)+letter(6) of d
-  明るさ   ← letter(7)+letter(8)+letter(9) of d
-  HSV再現_完成版 の処理を呼ぶ</div>
-  </div>
 
   <!-- Sprite color -->
   <div class="sprite-row">
